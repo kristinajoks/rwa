@@ -1,0 +1,165 @@
+body{
+    background-color: mistyrose;
+}
+
+.upper-container{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.sss{
+    width: 80px;
+    rotate: 270deg;
+}
+
+.lower-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.left-container{
+    flex: 1;
+    margin: 30px;
+    margin-left: 50px;
+}
+
+.right-container {
+    flex: 1;
+    padding: 30px;
+}
+
+.game-container{
+    flex: 0 0 auto;
+    width: 50%; 
+    max-width: 38%; 
+    aspect-ratio: 1/1; 
+    background-color: rgb(104, 201, 104); 
+    border : 2px solid green;
+    justify-content: center;
+    align-items: center; 
+}
+
+#game-canvas{
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin:0;
+    padding: 0;
+}
+
+.settings-section{
+    width: 90%;
+    /* height: 80%; */
+    background-color:gainsboro;
+    border-radius: 5%;
+    border : 2px solid black;
+}
+
+.dimDiv{
+    margin-top: -10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.slider{
+    margin-top: -5px;
+    width: 80%;
+}
+
+.shapeDiv, .foodDiv, .speedDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.shapeCheckboxes{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 40px;
+    margin-top: -10px;
+}
+
+.shapeCheckboxContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.speedCheckboxes{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: -10px;
+}   
+
+.foodCheckboxes{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: -10px;
+}
+
+.speedCheckboxes{
+    margin-bottom: 10px;
+}
+
+#start-button{
+    width: 90%;
+    height: 40px;
+    margin-top: 20px;
+    font-size: medium;
+    font-weight: bold;
+    border-radius: 15px;
+    background-color:rgb(240, 73, 170);
+}
+
+.fruit{
+    z-index: 1;
+}
+
+#fruitDiv, #vegetableDiv {
+    display: none;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.fruitLabel, .vegetableLabel{
+    width: 30px;
+    height: 30px;
+}
+
+
+.fruitCheckboxContainer, .vegetableCheckboxContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.results-section{
+    background:  gainsboro;
+    width: 100%;
+    height: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    border-radius: 5%;
+}
+
+#show-results-button{
+    border-radius: 5px;
+    height: 30px;
+    width: 100%;
+    font-size: medium;
+    background-color: lightblue;
+}
