@@ -1,3 +1,8 @@
+// import {ajax} from 'rxjs/ajax';
+import { fromEvent, map, startWith } from 'rxjs';
+import {dataAPI, Response} from '../observables/apiservice';
+import {shapeValue$} from '../observables/settings';
+
 export function createGameLayout(body: HTMLElement): void {
   
     const upperContainer = document.createElement('div');
@@ -44,13 +49,14 @@ export function createGameLayout(body: HTMLElement): void {
 
     const settingsSection = document.createElement('div');
     settingsSection.classList.add('settings-section'); 
-  
-    const data = fetchData();
-    data.then((data) => {
-        const {shapes, food, speed, fruit, vegetable} = data;
-        createSettings(settingsSection, shapes, food, speed, fruit, vegetable);
+
+    //rxjs
+    dataAPI.subscribe({
+        next: (response: Response) => {
+            const {shapes, food, speed, fruit, vegetable} = response;
+            createSettings(settingsSection, shapes, food, speed, fruit, vegetable);
+        }
     });
-    
   
     leftContainer.appendChild(settingsSection);
   
@@ -86,7 +92,7 @@ export function createGameLayout(body: HTMLElement): void {
   }
 
 
-  function createGridCanvas(canvas: HTMLCanvasElement, canvDim: number) {
+  function createGridCanvas(canvas: HTMLCanvasElement, canvDim: number) : HTMLCanvasElement{
     const cellSize1 = canvas.width / canvDim;
     const cellSize2 = canvas.height / canvDim;
   
@@ -117,13 +123,16 @@ export function createGameLayout(body: HTMLElement): void {
       ctx.lineTo(canvas.width, y);
       ctx.stroke();
     }
+
+    return canvas;
 }
   
 function fillDefault(){
     const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
     createGridCanvas(canvas, 10);
-    drawFruit(canvas, canvas.width/10, canvas.height/10, 'src\\assets\\plum.png', 10);
+    // drawFruit(canvas, canvas.width/10, canvas.height/10, 'src\\assets\\plum.png', 10);
     //drawSnake
+    drawSnake(canvas, 'round', 'yellow', canvas.width/10 *0.8, canvas.height/10 * 0.8, [{x: 0, y: 0}, {x: 1, y: 0}])
 }
 
 function createSettings(container : HTMLDivElement,
@@ -158,11 +167,13 @@ function createSettings(container : HTMLDivElement,
     dimDiv.appendChild(sliderValue);
 
 
-    slider.onchange = function() {
-        sliderValue.textContent = slider.value;
-        createGridCanvas(document.getElementById('game-canvas') as HTMLCanvasElement, parseInt(slider.value));
-        drawFruit(canvas, canvas.width/(slider.value as unknown as number), canvas.height/(slider.value as unknown as number), 'src\\assets\\plum.png', slider.value as unknown as number);
-    }
+    // slider.onchange = function() {
+    //     sliderValue.textContent = slider.value;
+    //     createGridCanvas(document.getElementById('game-canvas') as HTMLCanvasElement, parseInt(slider.value));
+    //     drawFruit(canvas, canvas.width/(slider.value as unknown as number), canvas.height/(slider.value as unknown as number), 'src\\assets\\plum.png', slider.value as unknown as number);
+    // }
+
+   
 
     const shapeDiv = document.createElement('div');
     shapeDiv.classList.add('shapeDiv');
@@ -352,17 +363,37 @@ function createSettings(container : HTMLDivElement,
         speedCheckboxes.appendChild(speedCheckboxContainer);
     });
 
+
+    //rxjs
+    const sliderValue$ = fromEvent(slider, 'input').pipe(
+            map((event: Event) => (event.target as HTMLInputElement).value),
+            startWith(slider.value)
+        );
+
+    sliderValue$.subscribe((value) => {
+        sliderValue.textContent = value;
+        const canv = createGridCanvas(document.getElementById('game-canvas') as HTMLCanvasElement, parseInt(value));
+        drawFruit(canv, canv.width/(value as unknown as number), canv.height/(value as unknown as number), 'src\\assets\\plum.png', value as unknown as number);
+    });   
+
+    //pomerice se u index.ts
+    shapeValue$.subscribe((value) => {
+        console.log(value);
+    });
     
 }
 
 function drawFruit(canvas: HTMLCanvasElement, width: number, height: number, src : string, sliderValue: number){    
     //mozda nepotrebno
+    console.log('drawFruit');
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
         throw new Error('Canvas not supported in this browser.');
     }
 
+    const canvasRect = canvas.getBoundingClientRect();
+    ctx.clearRect(canvasRect.left, canvasRect.top, canvasRect.width, canvasRect.height)
     // const fruit = document.createElement('img');
 
     const fruit = new Image();
@@ -381,6 +412,68 @@ function drawFruit(canvas: HTMLCanvasElement, width: number, height: number, src
     fruit.alt = 'apple';
     fruit.classList.add('fruit');
 }
+
+function drawSnake(canvas: HTMLCanvasElement, shape: String, color: string, segmentSizeX: number, segmentSizeY: number, snake: { x: number; y: number }[]) {
+    const ctx = canvas.getContext('2d');
+    const canvasRect = canvas.getBoundingClientRect();
+
+    ctx.clearRect(canvasRect.left, canvasRect.top, canvas.width, canvas.height); //izmeniti malo da bi isla po sredini 
+  
+    ctx.fillStyle = 'green';
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+  
+    // Loop through the snake's segments and draw each one
+    for (const segment of snake) {
+      // Calculate the position of the segment on the canvas
+      const x = segment.x * segmentSizeX; // Assuming segmentSize is the size of each segment
+      const y = segment.y * segmentSizeY;
+  
+      // Draw the snake segment as a filled rectangle
+      ctx.fillRect(x, y, segmentSizeX, segmentSizeY);
+  
+      // Draw a border around the snake segment
+      ctx.strokeRect(x, y, segmentSizeX, segmentSizeY);
+    }
+}
+
+// function drawSnake(ctx, snake) {
+//   const snakeColor = 'green';
+//   const eyeColor = 'white';
+//   const eyeRadius = 3;
+
+//   // Draw the snake's body
+//   ctx.fillStyle = snakeColor;
+//   for (let i = 0; i < snake.length; i++) {
+//     const segment = snake[i];
+//     const x = segment.x;
+//     const y = segment.y;
+//     const radius = 10; // Adjust the radius as needed
+//     ctx.beginPath();
+//     ctx.arc(x, y, radius, 0, Math.PI * 2);
+//     ctx.fill();
+//     ctx.closePath();
+//   }
+
+//   // Draw the snake's head with eyes
+//   const head = snake[0];
+//   ctx.fillStyle = snakeColor;
+//   ctx.beginPath();
+//   ctx.arc(head.x, head.y, 10, 0, Math.PI * 2);
+//   ctx.fill();
+//   ctx.closePath();
+
+//   // Draw the eyes
+//   const eyeOffsetX = 5; // Offset from the head's center
+//   const eyeOffsetY = -5;
+//   ctx.fillStyle = eyeColor;
+//   ctx.beginPath();
+//   ctx.arc(head.x + eyeOffsetX, head.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+//   ctx.arc(head.x - eyeOffsetX, head.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+//   ctx.fill();
+//   ctx.closePath();
+// }
+
 
 async function fetchData() {
     try {

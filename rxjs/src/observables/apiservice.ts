@@ -1,4 +1,5 @@
-import {Observable, from} from "rxjs";
+import {Observable, catchError, from, map} from "rxjs";
+import {ajax} from "rxjs/ajax";
 import {Food} from "../models/food";
 
 
@@ -18,6 +19,20 @@ export function getFood(type:string):Observable<Food[]>{
     )
 }
 
-export function getData(){
-    
+export interface Response{
+    shapes: any[];
+    food: any[];
+    speed: any[];
+    fruit: any[];
+    vegetable: any[];
 }
+
+export const dataAPI = ajax.getJSON(`${API_URL}/db`).pipe(
+    map((response:Response) => {
+        return response;
+    }),
+    catchError (err => {   
+        console.error(err);   
+        throw err; 
+    })
+);
