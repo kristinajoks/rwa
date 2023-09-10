@@ -1,4 +1,5 @@
-import {createGameLayout} from './view/initialView';
+import { createGameLayout } from "./view/initialView";
 
-createGameLayout(document.body)
+createGameLayout(document.body);
+
 

@@ -1,8 +1,7 @@
 {
     "shapes": [
       { "id": 1, "type": "round" },
-      { "id": 2, "type": "square" },
-      { "id": 3, "type": "zigzag" }
+      { "id": 2, "type": "square" }
     ],
     "food": [
       { "id": 1, "type": "fruit" },
