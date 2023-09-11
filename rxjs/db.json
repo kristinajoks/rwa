@@ -7,11 +7,6 @@
       { "id": 1, "type": "fruit" },
       { "id": 2, "type": "vegetable" }
     ],
-    "speed": [
-      { "id": 3, "type": "slow" },
-      { "id": 1, "type": "normal" },
-      { "id": 2, "type": "fast" }
-    ],
     "fruit" : [
         { "id": 1, "type": "apple", "color": "red" },
         { "id": 2, "type": "cherry", "color": "dark red" },

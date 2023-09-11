@@ -49,11 +49,12 @@ body{
 }
 
 .settings-section{
-    width: 90%;
     /* height: 80%; */
     background-color:gainsboro;
     border-radius: 5%;
     border : 2px solid black;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .dimDiv{
@@ -66,7 +67,6 @@ body{
 
 .slider{
     margin-top: -5px;
-    width: 80%;
 }
 
 .shapeDiv, .foodDiv, .speedDiv{
@@ -75,6 +75,7 @@ body{
     justify-content: center;
     align-items: center;
 }
+
 
 .shapeCheckboxes{
     width: 100%;
@@ -162,4 +163,12 @@ body{
     width: 100%;
     font-size: medium;
     background-color: lightblue;
+}
+
+#shapeLabel, #foodLabel{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    align-items: center;
+
 }

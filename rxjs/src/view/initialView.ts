@@ -1,9 +1,6 @@
-// import {ajax} from 'rxjs/ajax';
-import { fromEvent, map, startWith } from 'rxjs';
-import {dataAPI, Response} from '../observables/apiservice';
-import {foodSelectionObservable} from '../observables/settings';
+import { dataAPI, getFruit, Response } from "../observables/apiservice";
 
-export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElement, settingsSection: HTMLElement, resultsSection: HTMLElement } {
+export async function createGameLayout(body: HTMLElement) {
   
     const upperContainer = document.createElement('div');
     upperContainer.classList.add('upper-container');
@@ -39,9 +36,10 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
     const canvas = document.createElement('canvas');
     canvas.id = 'game-canvas'; 
     gameContainer.appendChild(canvas);
-    // createGridCanvas(canvas, 10);
 
-    fillDefault();
+    //probno
+    drawGrid(canvas, 10);
+    drawFood(canvas, 10, 'apple');
 
     const rightContainer = document.createElement('div');
     rightContainer.classList.add('right-container');
@@ -50,16 +48,14 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
     const settingsSection = document.createElement('div');
     settingsSection.classList.add('settings-section'); 
 
-    // fetchData().then((data) => {
-    //     const {shapes, food, speed, fruit, vegetable} = data;
-    //     createSettings(settingsSection, shapes, food, speed, fruit, vegetable); //settingsSection,
-    // });
+//
 
-//prsla
+//
     const dimDiv = document.createElement('div');
     dimDiv.classList.add('dimDiv');
     dimDiv.id = 'dimDiv';
     settingsSection.appendChild(dimDiv);
+
 
     const shapeDiv = document.createElement('div');
     shapeDiv.classList.add('shapeDiv');
@@ -81,10 +77,6 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
     vegetableDiv.id = 'vegetableDiv';
     settingsSection.appendChild(vegetableDiv);
 
-    const speedDiv = document.createElement('div');
-    speedDiv.classList.add('speedDiv');
-    speedDiv.id = 'speedDiv';
-    settingsSection.appendChild(speedDiv);
     
     //kreirani divovi
 
@@ -111,51 +103,42 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
 
     var w = slider.value as unknown as number;
 
-    const sliderValue$ = fromEvent(slider, 'input').pipe(
-        map((event: Event) => (event.target as HTMLInputElement).value),
-        startWith(slider.value)
-    );
+ //
+ 
+    // const response : Response = await new Promise((resolve)=>{
+    //     dataAPI.subscribe((data) => {
+    //     // const shapes = response.shapes;
+    //     // const food = response.food;
+    //     // const fruit = response.fruit;
+    //     // const vegetable = response.vegetable;
+    //     resolve(data);
+    // });
+    // });
 
-    sliderValue$.subscribe((value) => {
-        sliderValue.textContent = value;
-        const canv = createGridCanvas(document.getElementById('game-canvas') as HTMLCanvasElement, parseInt(value));
-        drawFruit(canv, canv.width/(value as unknown as number), canv.height/(value as unknown as number), 'src\\assets\\plum.png', value as unknown as number);
-    }); 
 
-    //preuzimanje podataka
-    fetch('db.json')
-    .then(response => response.json())
-    .then(data => {
-        createShapes(data.shapes, 'shapeDiv');
-        createFood(data.food, data.fruit, data.vegetable, 'foodDiv');
-        createSpeed(data.speed, 'speedDiv');
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });  
-  
+    dataAPI.subscribe((response) => {
+        createShapes(response.shapes, 'shapeDiv');
+        createFood(response.food, response.fruit, response.vegetable, 'foodDiv');
+    });
+
     leftContainer.appendChild(settingsSection);
   
-
-    //odavde
+//
     const startButton = document.createElement('button');
     startButton.textContent = 'START GAME';
     startButton.id = 'start-button';
     leftContainer.appendChild(startButton);
-
 
     const showResultsButton = document.createElement('button');
     showResultsButton.textContent = 'Show Results';
     showResultsButton.id = 'show-results-button'; 
     rightContainer.appendChild(showResultsButton);
   
-    // Create the results section (hidden by default)
     const resultsSection = document.createElement('div');
     resultsSection.classList.add('results-section');
     resultsSection.style.display = 'none';
   
-    // Create elements for displaying game results
-    // Add these elements to the resultsSection
+    //display results
   
 
     rightContainer.appendChild(resultsSection);
@@ -165,16 +148,14 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
       resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
     });
   
-    // You can return references to important elements (e.g., canvas) for later use
-    // Return { canvas, settingsSection, resultsSection } or other elements you need
-    return { canvas, settingsSection, resultsSection };
 }
 
 
-  function createShapes(shapes: {id: number; type: string}[],containerID : string){
-    const shapeDiv = document.getElementById(containerID) as HTMLDivElement;
+ function createShapes(shapes: { id: number; type: string }[], containerID: string) { //async
+    // return new Promise<void>((resolve) => {
+        const shapeDiv = document.getElementById(containerID) as HTMLDivElement;
 
-    const shape = document.createElement('h3');
+        const shape = document.createElement('h3');
     shape.classList.add('shape');
     shape.textContent = 'Snake shape';
     shapeDiv.appendChild(shape);
@@ -184,40 +165,40 @@ export function createGameLayout(body: HTMLElement) : { canvas: HTMLCanvasElemen
     shapeDiv.appendChild(shapeCheckboxes);
 
 
-    const shapeLabels: { [key: string]: string } = {
-        round: '\u25CF', 
-        square: '\u25A0', 
-        zigzag: '\u25B2', 
-    };
+        const shapeLabels: { [key: string]: string } = {
+            round: '\u25CF',
+            square: '\u25A0'
+        };
 
-    shapes.forEach((shape) => {
-        const shapeCheckboxContainer = document.createElement('div');
-        shapeCheckboxContainer.classList.add('shapeCheckboxContainer');
+        shapes.forEach((shape) => {
+            const shapeCheckboxContainer = document.createElement('div');
+            shapeCheckboxContainer.classList.add('shapeCheckboxContainer');
 
-        const shapeCheckbox = document.createElement('input');
-        shapeCheckbox.type = 'radio';
-        shapeCheckbox.name = 'shapes';
-        shapeCheckbox.value = shape.type;
-        shapeCheckbox.id = shape.id.toString();
-    
-        const shapeLabel = document.createElement('label');
-        shapeLabel.classList.add('shapeLabel');
-        shapeLabel.innerHTML = `${shapeLabels[shape.type]}`;
+            const shapeCheckbox = document.createElement('input');
+            shapeCheckbox.type = 'radio';
+            shapeCheckbox.name = 'shapes';
+            shapeCheckbox.value = shape.type;
+            shapeCheckbox.id = shape.id.toString();
 
-        shapeCheckboxContainer.appendChild(shapeLabel);
-        shapeCheckboxContainer.appendChild(shapeCheckbox);
-    
-        shapeCheckboxes.appendChild(shapeCheckboxContainer);
-      });
+            const shapeLabel = document.createElement('label');
+            shapeLabel.classList.add('shapeLabel');
+            shapeLabel.innerHTML = `${shapeLabels[shape.type]}`;
 
-  }
+            shapeCheckboxContainer.appendChild(shapeLabel);
+            shapeCheckboxContainer.appendChild(shapeCheckbox);
 
+            shapeCheckboxes.appendChild(shapeCheckboxContainer);
+        });
 
-function createFood(food: {id: number; type: string}[],
+    //     resolve();
+    // });
+}
+
+   function createFood(food: {id: number; type: string}[], //async
     fruit:{id: number; type: string}[],
     vegetable:{id: number; type: string}[],
     containerID : string){
-
+    // return new Promise<void>((resolve) => {
     const foodDiv = document.getElementById(containerID) as HTMLDivElement;
 
     const foodType = document.createElement('h3');
@@ -317,252 +298,110 @@ function createFood(food: {id: number; type: string}[],
             vegetableDiv.style.display = 'none';
         }
     });
+
+    // resolve();
+    // });
 }
 
-function createSpeed(speed: {id: number; type: string}[], containerID : string){
 
-    const speedDiv = document.getElementById(containerID) as HTMLDivElement;
+function drawGrid(canvas: HTMLCanvasElement, dimension: number){
+    const cellW = canvas.width / dimension;
+    const cellH = canvas.height / dimension;
+
+    const cvRect = canvas.getBoundingClientRect();
+
+    const ctx = canvas.getContext('2d');
+
+    if(!ctx)
+        return;
+
+    ctx.clearRect(cvRect.left, cvRect.top, canvas.width, canvas.height);
+
+
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 1.2;
+    for(let x = 0; x < canvas.width; x += cellW){
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+
+    for(let y = 0; y < canvas.height; y += cellH){
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+
+}
+
+function drawFood(canvas: HTMLCanvasElement, dimension: number, src: string) : {x: number, y: number}
+{
+    let x = 0;
+    let y = 0;
+
+    const slider = document.getElementById('slider') as HTMLInputElement; //NULL
+    // const val =  slider.value as unknown as number;
+    // console.log(val);
+
+    const width = canvas.width / dimension;
+    const height = canvas.height / dimension;
+
+    const ctx = canvas.getContext('2d');
     
-    const speedType = document.createElement('h3');
-    speedType.classList.add('speed');
-    speedType.textContent = 'Speed';
-    speedDiv.appendChild(speedType);
+    if(!ctx)
+        return;
 
-    const speedCheckboxes = document.createElement('div');
-    speedCheckboxes.classList.add('speedCheckboxes');
-    speedDiv.appendChild(speedCheckboxes);
+    const food = new Image();
+    food.src = "src\\assets\\" + src + ".png";
 
-    speed.forEach((speed) => {
-        const speedCheckboxContainer = document.createElement('div');
-        speedCheckboxContainer.classList.add('speedCheckboxContainer');
+    food.onload = () => {
+        var rand1 = Math.floor(Math.random() * dimension) * width;
+        var rand2 = Math.floor(Math.random() * dimension) * height; 
 
-        const speedCheckbox = document.createElement('input');
-        speedCheckbox.type = 'radio';
-        speedCheckbox.name = 'speed';
-        speedCheckbox.value = speed.type;
-        speedCheckbox.id = 'shapeChbx';
-    
-        const speedLabel = document.createElement('label');
-        speedLabel.classList.add('speedLabel');
-        speedLabel.innerHTML = `${speed.type}`;
+        x = rand1;
+        y = rand2;
 
-        speedCheckboxContainer.appendChild(speedLabel);
-        speedCheckboxContainer.appendChild(speedCheckbox);
-    
-        speedCheckboxes.appendChild(speedCheckboxContainer);
+        ctx.drawImage(food, rand1, rand2, width, height);
+    }
+
+    //vraca i boju nacrtane hrane da bi zmija nakon pojedenog voca/povrca promenila boju
+    const fruitColor = getFruit(src).subscribe((fruit) => {
+        return fruit.color;
     });
-}
 
-  function createGridCanvas(canvas: HTMLCanvasElement, canvDim: number) : HTMLCanvasElement{
-    const cellSize1 = canvas.width / canvDim;
-    const cellSize2 = canvas.height / canvDim;
-  
-    const ctx = canvas.getContext('2d');
-  
-    if (!ctx) {
-      throw new Error('Canvas not supported in this browser.');
-    }
+    const vegetableColor = getFruit(src).subscribe((vegetable) => {
+        return vegetable.color;
+    });
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-    ctx.strokeStyle = 'green'; 
-    ctx.lineWidth = 1.2; 
-    ctx.lineCap = 'square';
-    ctx.lineJoin = 'miter';
+    //doraditi
     
-    for (let x = 0; x <= canvas.width; x += cellSize1) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, canvas.height);
-      ctx.stroke();
-    }
-  
-    for (let y = 0; y <= canvas.height; y += cellSize2) {
-
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(canvas.width, y);
-      ctx.stroke();
-    }
-
-    return canvas;
-}
-  
-function fillDefault(){
-    const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
-    createGridCanvas(canvas, 10);
-    // drawFruit(canvas, canvas.width/10, canvas.height/10, 'src\\assets\\plum.png', 10);
-    //drawSnake
-    drawSnake(canvas, 'round', 'yellow', canvas.width/10 *0.8, canvas.height/10 * 0.8, [{x: 0, y: 0}, {x: 1, y: 0}])
+    return {x, y};
 }
 
-  //rxjs
-//   dataAPI.subscribe({
-//     next: (response: Response) => {
-//         const {shapes, food, speed, fruit, vegetable} = response;
-//         createSettings(shapes, food, speed, fruit, vegetable); //settingsSection,
-//     }
-// });
+function drawSnake(canvas: HTMLCanvasElement, dimension: number, shape: string, color: string, length: number, head: {x: number, y: number})
+{
+    const width = canvas.width / dimension;
+    const height = canvas.height / dimension;
 
-
-export function drawFruit(canvas: HTMLCanvasElement, width: number, height: number, src : string, sliderValue: number){    
-    //mozda nepotrebno
-    console.log('drawFruit');
     const ctx = canvas.getContext('2d');
 
-    if (!ctx) {
-        throw new Error('Canvas not supported in this browser.');
-    }
+    if(!ctx)
+        return;
 
-    const canvasRect = canvas.getBoundingClientRect();
-    ctx.clearRect(canvasRect.left, canvasRect.top, canvasRect.width, canvasRect.height)
-    // const fruit = document.createElement('img');
-
-    const fruit = new Image();
-    // fruit.src = 'src\\assets\\plum.png';
-    fruit.src = src;
-    
-
-    fruit.onload = () =>{
-        
-        var rand1 = Math.floor(Math.random() * (sliderValue)) * width;
-        var rand2 = Math.floor(Math.random() * (sliderValue)) * height;
-
-        ctx.drawImage(fruit, rand1, rand2, width, height);
-    };
-
-    fruit.alt = 'apple';
-    fruit.classList.add('fruit');
-}
-
-export function drawSnake(canvas: HTMLCanvasElement, shape: String, color: string, segmentSizeX: number, segmentSizeY: number, snake: { x: number; y: number }[]) {
-    const ctx = canvas.getContext('2d');
-    const canvasRect = canvas.getBoundingClientRect();
-
-    ctx.clearRect(canvasRect.left, canvasRect.top, canvas.width, canvas.height); //izmeniti malo da bi isla po sredini 
-  
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = color;
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 2;
-  
-    // Loop through the snake's segments and draw each one
-    for (const segment of snake) {
-      // Calculate the position of the segment on the canvas
-      const x = segment.x * segmentSizeX; // Assuming segmentSize is the size of each segment
-      const y = segment.y * segmentSizeY;
-  
-      // Draw the snake segment as a filled rectangle
-      ctx.fillRect(x, y, segmentSizeX, segmentSizeY);
-  
-      // Draw a border around the snake segment
-      ctx.strokeRect(x, y, segmentSizeX, segmentSizeY);
+
+    const cvRect = canvas.getBoundingClientRect(); 
+
+    ctx.clearRect(cvRect.left, cvRect.top, canvas.width, canvas.height);
+
+    if(shape === 'round'){
+        ctx.arc(head.x, head.y, width/2, 0, 2 * Math.PI);
     }
+    
+    //doraditi logiku za pomeranje zmije, pravac kao parametar? 
 }
-
-// function drawSnake(ctx, snake) {
-//   const snakeColor = 'green';
-//   const eyeColor = 'white';
-//   const eyeRadius = 3;
-
-//   // Draw the snake's body
-//   ctx.fillStyle = snakeColor;
-//   for (let i = 0; i < snake.length; i++) {
-//     const segment = snake[i];
-//     const x = segment.x;
-//     const y = segment.y;
-//     const radius = 10; // Adjust the radius as needed
-//     ctx.beginPath();
-//     ctx.arc(x, y, radius, 0, Math.PI * 2);
-//     ctx.fill();
-//     ctx.closePath();
-//   }
-
-//   // Draw the snake's head with eyes
-//   const head = snake[0];
-//   ctx.fillStyle = snakeColor;
-//   ctx.beginPath();
-//   ctx.arc(head.x, head.y, 10, 0, Math.PI * 2);
-//   ctx.fill();
-//   ctx.closePath();
-
-//   // Draw the eyes
-//   const eyeOffsetX = 5; // Offset from the head's center
-//   const eyeOffsetY = -5;
-//   ctx.fillStyle = eyeColor;
-//   ctx.beginPath();
-//   ctx.arc(head.x + eyeOffsetX, head.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
-//   ctx.arc(head.x - eyeOffsetX, head.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
-//   ctx.fill();
-//   ctx.closePath();
-// }
-
-export function updateCanvasDimensions(dimension: number) {
-
-}
-
-export function updateSnakeShape(shape: string) {
-
-}
-
-// fruitRadio.addEventListener('change', () => {
-//     if(fruitRadio.checked){
-//         fruitDiv.style.display = 'flex';
-//         vegetableDiv.style.display = 'none';
-//     }
-//     else{
-//         fruitDiv.style.display = 'none';
-//     }
-// });
-
-
-// vegetableRadio.addEventListener('change', () => {
-//     if(vegetableRadio.checked){
-//         vegetableDiv.style.display = 'flex';
-//         fruitDiv.style.display = 'none';
-//     }
-//     else{
-//         vegetableDiv.style.display = 'none';
-//     }
-// });
-
-export function updateFoodType(food: string) {
-    // const fruitDiv = document.getElementById('fruitDiv') as HTMLDivElement;
-    const fruitDiv = document.querySelector('.fruitDiv') as HTMLDivElement;
-    const vegetableDiv = document.getElementById('vegetableDiv') as HTMLDivElement;
-
-    if(food === "fruit"){
-        fruitDiv.style.display = 'flex';
-        vegetableDiv.style.display = 'none';
-    }
-    else{
-        fruitDiv.style.display = 'none';
-        vegetableDiv.style.display = 'flex';
-    }
-
-    // console.log(settingsSection.childNodes)
-    // console.log(settingsSection.children)
-    // dimDiv.style.display = 'none';
-}
-
-export function updateFruitType(fruit: string) {    
-
-}
-
-export function updateVegetableType(vegetable: string) {
-
-}
-
-async function fetchData() {
-    try {
-      const response = await fetch('db.json');
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return null;
-    }
-  }
-  
