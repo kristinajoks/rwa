@@ -1,7 +1,10 @@
+import { map, of, tap } from "rxjs";
+import { Snake } from "../models/snake";
 import { dataAPI, getFruit, Response } from "../observables/apiservice";
 
-export async function createGameLayout(body: HTMLElement) {
+export function createGameLayout(body: HTMLElement) {
   
+    //main layout
     const upperContainer = document.createElement('div');
     upperContainer.classList.add('upper-container');
     body.appendChild(upperContainer);
@@ -37,9 +40,8 @@ export async function createGameLayout(body: HTMLElement) {
     canvas.id = 'game-canvas'; 
     gameContainer.appendChild(canvas);
 
-    //probno
-    drawGrid(canvas, 10);
-    drawFood(canvas, 10, 'apple');
+    //INICIJALNO ISCRTAVANJE
+    draw(canvas, 10, new Snake());
 
     const rightContainer = document.createElement('div');
     rightContainer.classList.add('right-container');
@@ -49,8 +51,47 @@ export async function createGameLayout(body: HTMLElement) {
     settingsSection.classList.add('settings-section'); 
 
 //
+    createSettings(settingsSection);
 
-//
+    const returnObservable = dataAPI.pipe(
+        tap((response: Response) => {
+            createShapes(response.shapes, 'shapeDiv');
+            createFood(response.food, response.fruit, response.vegetable, 'foodDiv');
+        })
+    );
+    // return returnObservable;
+
+    leftContainer.appendChild(settingsSection);
+  
+//  
+    const startButton = document.createElement('button');
+    startButton.textContent = 'START GAME';
+    startButton.id = 'start-button';
+    leftContainer.appendChild(startButton);
+
+    const showResultsButton = document.createElement('button');
+    showResultsButton.textContent = 'Show Results';
+    showResultsButton.id = 'show-results-button'; 
+    rightContainer.appendChild(showResultsButton);
+  
+    const resultsSection = document.createElement('div');
+    resultsSection.classList.add('results-section');
+    resultsSection.style.display = 'none';
+  
+    //display results
+  
+
+    rightContainer.appendChild(resultsSection);
+
+    showResultsButton.addEventListener('click', () => {
+      resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
+    });
+
+    return returnObservable;
+}
+
+function createSettings(settingsSection : HTMLDivElement){
+    //
     const dimDiv = document.createElement('div');
     dimDiv.classList.add('dimDiv');
     dimDiv.id = 'dimDiv';
@@ -76,8 +117,6 @@ export async function createGameLayout(body: HTMLElement) {
     vegetableDiv.classList.add('vegetableDiv');
     vegetableDiv.id = 'vegetableDiv';
     settingsSection.appendChild(vegetableDiv);
-
-    
     //kreirani divovi
 
     //nevezano za bazu, popunjeno odmah
@@ -101,104 +140,54 @@ export async function createGameLayout(body: HTMLElement) {
     sliderValue.textContent = '10';
     dimDiv.appendChild(sliderValue);
 
-    var w = slider.value as unknown as number;
-
  //
- 
-    // const response : Response = await new Promise((resolve)=>{
-    //     dataAPI.subscribe((data) => {
-    //     // const shapes = response.shapes;
-    //     // const food = response.food;
-    //     // const fruit = response.fruit;
-    //     // const vegetable = response.vegetable;
-    //     resolve(data);
-    // });
-    // });
-
-
-    dataAPI.subscribe((response) => {
-        createShapes(response.shapes, 'shapeDiv');
-        createFood(response.food, response.fruit, response.vegetable, 'foodDiv');
-    });
-
-    leftContainer.appendChild(settingsSection);
-  
-//
-    const startButton = document.createElement('button');
-    startButton.textContent = 'START GAME';
-    startButton.id = 'start-button';
-    leftContainer.appendChild(startButton);
-
-    const showResultsButton = document.createElement('button');
-    showResultsButton.textContent = 'Show Results';
-    showResultsButton.id = 'show-results-button'; 
-    rightContainer.appendChild(showResultsButton);
-  
-    const resultsSection = document.createElement('div');
-    resultsSection.classList.add('results-section');
-    resultsSection.style.display = 'none';
-  
-    //display results
-  
-
-    rightContainer.appendChild(resultsSection);
-  
-
-    showResultsButton.addEventListener('click', () => {
-      resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
-    });
-  
+   
 }
 
+ function createShapes(shapes: { id: number; type: string }[], containerID: string) { 
+    const shapeDiv = document.getElementById(containerID) as HTMLDivElement;
 
- function createShapes(shapes: { id: number; type: string }[], containerID: string) { //async
-    // return new Promise<void>((resolve) => {
-        const shapeDiv = document.getElementById(containerID) as HTMLDivElement;
-
-        const shape = document.createElement('h3');
+    const shape = document.createElement('h3');
     shape.classList.add('shape');
     shape.textContent = 'Snake shape';
     shapeDiv.appendChild(shape);
 
-    const shapeCheckboxes = document.createElement('div');
-    shapeCheckboxes.classList.add('shapeCheckboxes');
-    shapeDiv.appendChild(shapeCheckboxes);
+    const shapeRadioButtons = document.createElement('div');
+    shapeRadioButtons.classList.add('shapeRadioButtons');
+    shapeDiv.appendChild(shapeRadioButtons);
 
 
-        const shapeLabels: { [key: string]: string } = {
-            round: '\u25CF',
-            square: '\u25A0'
-        };
+    const shapeLabels: { [key: string]: string } = {
+        round: '\u25CF',
+        square: '\u25A0'
+    };
 
-        shapes.forEach((shape) => {
-            const shapeCheckboxContainer = document.createElement('div');
-            shapeCheckboxContainer.classList.add('shapeCheckboxContainer');
+    shapes.forEach((shape) => {
+        const shapeRadioContainer = document.createElement('div');
+        shapeRadioContainer.classList.add('shapeRadioContainer');
 
-            const shapeCheckbox = document.createElement('input');
-            shapeCheckbox.type = 'radio';
-            shapeCheckbox.name = 'shapes';
-            shapeCheckbox.value = shape.type;
-            shapeCheckbox.id = shape.id.toString();
+        const shapeRadio = document.createElement('input');
+        shapeRadio.type = 'radio';
+        shapeRadio.name = 'shapes';
+        shapeRadio.value = shape.type;
+        shapeRadio.id = shape.id.toString();
 
-            const shapeLabel = document.createElement('label');
-            shapeLabel.classList.add('shapeLabel');
-            shapeLabel.innerHTML = `${shapeLabels[shape.type]}`;
+        const shapeLabel = document.createElement('label');
+        shapeLabel.classList.add('shapeLabel');
+        shapeLabel.innerHTML = `${shapeLabels[shape.type]}`;
 
-            shapeCheckboxContainer.appendChild(shapeLabel);
-            shapeCheckboxContainer.appendChild(shapeCheckbox);
+        shapeRadioContainer.appendChild(shapeLabel);
+        shapeRadioContainer.appendChild(shapeRadio);
 
-            shapeCheckboxes.appendChild(shapeCheckboxContainer);
-        });
+        shapeRadioButtons.appendChild(shapeRadioContainer);
+    });
 
-    //     resolve();
-    // });
 }
 
-   function createFood(food: {id: number; type: string}[], //async
+function createFood(food: {id: number; type: string}[], //async
     fruit:{id: number; type: string}[],
     vegetable:{id: number; type: string}[],
     containerID : string){
-    // return new Promise<void>((resolve) => {
     const foodDiv = document.getElementById(containerID) as HTMLDivElement;
 
     const foodType = document.createElement('h3');
@@ -206,29 +195,29 @@ export async function createGameLayout(body: HTMLElement) {
     foodType.textContent = 'Food';
     foodDiv.appendChild(foodType);
 
-    const foodCheckboxes = document.createElement('div');
-    foodCheckboxes.classList.add('foodCheckboxes');
-    foodDiv.appendChild(foodCheckboxes);
+    const foodRadioButtons = document.createElement('div');
+    foodRadioButtons.classList.add('foodRadioButtons');
+    foodDiv.appendChild(foodRadioButtons);
 
     
     food.forEach((food) => {
-        const foodCheckboxContainer = document.createElement('div');
-        foodCheckboxContainer.classList.add('foodCheckboxContainer');
+        const foodRadioContainer = document.createElement('div');
+        foodRadioContainer.classList.add('foodRadioContainer');
 
-        const foodCheckbox = document.createElement('input');
-        foodCheckbox.type = 'radio';
-        foodCheckbox.name = 'food';
-        foodCheckbox.value = food.type;
-        foodCheckbox.id = food.id.toString();
+        const foodRadio = document.createElement('input');
+        foodRadio.type = 'radio';
+        foodRadio.name = 'food';
+        foodRadio.value = food.type;
+        foodRadio.id = food.id.toString();
     
         const foodLabel = document.createElement('label');
         foodLabel.classList.add('foodLabel');
         foodLabel.innerHTML = `${food.type}`;
 
-        foodCheckboxContainer.appendChild(foodLabel);
-        foodCheckboxContainer.appendChild(foodCheckbox);
+        foodRadioContainer.appendChild(foodLabel);
+        foodRadioContainer.appendChild(foodRadio);
     
-        foodCheckboxes.appendChild(foodCheckboxContainer);
+        foodRadioButtons.appendChild(foodRadioContainer);
     });
 
     const fruitDiv = document.getElementById('fruitDiv') as HTMLDivElement;
@@ -244,7 +233,6 @@ export async function createGameLayout(body: HTMLElement) {
 
         const fruitLabel = document.createElement('img');
         fruitLabel.classList.add('fruitLabel');
-        // fruitLabel.innerHTML = `${fruit.type}`;
         fruitLabel.src = `src\\assets\\${fruit.type}.png`;
 
         fruitCheckboxContainer.appendChild(fruitLabel);
@@ -276,132 +264,134 @@ export async function createGameLayout(body: HTMLElement) {
     });
 
     vegetableDiv.style.display = 'none';
-    
-    const fruitRadio = document.querySelector('input[name="food"][value="fruit"]') as HTMLInputElement;
-    fruitRadio.addEventListener('change', () => {
-        if(fruitRadio.checked){
-            fruitDiv.style.display = 'flex';
-            vegetableDiv.style.display = 'none';
-        }
-        else{
-            fruitDiv.style.display = 'none';
-        }
-    });
-
-    const vegetableRadio = document.querySelector('input[name="food"][value="vegetable"]') as HTMLInputElement;
-    vegetableRadio.addEventListener('change', () => {
-        if(vegetableRadio.checked){
-            vegetableDiv.style.display = 'flex';
-            fruitDiv.style.display = 'none';
-        }
-        else{
-            vegetableDiv.style.display = 'none';
-        }
-    });
-
-    // resolve();
-    // });
 }
 
-
-function drawGrid(canvas: HTMLCanvasElement, dimension: number){
-    const cellW = canvas.width / dimension;
-    const cellH = canvas.height / dimension;
-
-    const cvRect = canvas.getBoundingClientRect();
-
-    const ctx = canvas.getContext('2d');
-
-    if(!ctx)
-        return;
-
-    ctx.clearRect(cvRect.left, cvRect.top, canvas.width, canvas.height);
-
-
-    ctx.strokeStyle = 'green';
-    ctx.lineWidth = 1.2;
-    for(let x = 0; x < canvas.width; x += cellW){
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-    }
-
-    for(let y = 0; y < canvas.height; y += cellH){
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-    }
-
-
-}
-
-function drawFood(canvas: HTMLCanvasElement, dimension: number, src: string) : {x: number, y: number}
-{
-    let x = 0;
-    let y = 0;
-
-    const slider = document.getElementById('slider') as HTMLInputElement; //NULL
-    // const val =  slider.value as unknown as number;
-    // console.log(val);
-
+export function draw(canvas: HTMLCanvasElement, dimension: number, snake: Snake){
     const width = canvas.width / dimension;
     const height = canvas.height / dimension;
 
     const ctx = canvas.getContext('2d');
-    
-    if(!ctx)
-        return;
+
+    if(!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawGrid(ctx, canvas.width, canvas.height, width, height);
+    drawFood(ctx, canvas.width, canvas.height, width, height, dimension, snake);
+    drawSnake(ctx, canvas.width, canvas.height, width, height, dimension, snake);
+}
+
+function drawGrid(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number){
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 1.2;
+
+    for(let x = 0; x < cw; x += width){
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, ch);
+        ctx.stroke();
+    }
+
+    for(let y = 0; y < ch; y += height){
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(cw, y);
+        ctx.stroke();
+    }
+}
+
+function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake) : {x: number, y: number}
+{
+    let x = 0;
+    let y = 0;
+
+    //DODATI LOGIKU ZA PREUZIMANJE NIZA HRANE, I AKO IMA VISE ONDA BIRANJE NEKE RANDOM OD NJIH
+    //ako je prazan, nacrtati jabuku
+    //ako nije, nacrtati random od njih
+
+    let src;
+    const foodArray = snake.getFood();
+
+    if(foodArray.length === 0){
+        src = snake.getFoodType() === 'fruit' ? 'apple' : 'carrot';
+    }
+    else if(foodArray.length === 1){
+        src = foodArray[0].type;
+    }
+    else{
+        const random = Math.floor(Math.random() * foodArray.length);
+        src = foodArray[random].type;
+    }
 
     const food = new Image();
     food.src = "src\\assets\\" + src + ".png";
 
     food.onload = () => {
-        var rand1 = Math.floor(Math.random() * dimension) * width;
-        var rand2 = Math.floor(Math.random() * dimension) * height; 
+        var rand1;
+        var rand2;
+        let taken;
 
-        x = rand1;
-        y = rand2;
+        do{
+            taken = false;
+            rand1 = Math.floor(Math.random() * dimension) ;
+            rand2 = Math.floor(Math.random() * dimension) ; 
+            
+            console.log(rand1, rand2);
 
-        ctx.drawImage(food, rand1, rand2, width, height);
+            //ako je zmija na tom polju, ponovo generisanje            
+            x = rand1;
+            y = rand2;
+            
+            for(const segment of snake.getBody()){
+                if(segment.x === rand1 && segment.y === rand2){
+                    taken = true;
+                    break;
+                }
+            }
+
+        }while(taken);
+
+        ctx.drawImage(food, rand1 * width, rand2 * height, width, height);
     }
 
-    //vraca i boju nacrtane hrane da bi zmija nakon pojedenog voca/povrca promenila boju
-    const fruitColor = getFruit(src).subscribe((fruit) => {
-        return fruit.color;
-    });
-
-    const vegetableColor = getFruit(src).subscribe((vegetable) => {
-        return vegetable.color;
-    });
-
+    //proveri sta ces za boju
     //doraditi
     
     return {x, y};
 }
 
-function drawSnake(canvas: HTMLCanvasElement, dimension: number, shape: string, color: string, length: number, head: {x: number, y: number})
+function drawSnake(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake) 
 {
-    const width = canvas.width / dimension;
-    const height = canvas.height / dimension;
-
-    const ctx = canvas.getContext('2d');
-
-    if(!ctx)
-        return;
-
-    ctx.fillStyle = color;
+    ctx.fillStyle = snake.getColor();
     ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
 
-    const cvRect = canvas.getBoundingClientRect(); 
+    for(const segment of snake.getBody()){
+        const x = segment.x * width;
+        const y = segment.y * height;
 
-    ctx.clearRect(cvRect.left, cvRect.top, canvas.width, canvas.height);
-
-    if(shape === 'round'){
-        ctx.arc(head.x, head.y, width/2, 0, 2 * Math.PI);
+        if(snake.getShape() === 'round'){
+            const cornerRadius = Math.min(width, height) / 1.5;
+            
+            ctx.beginPath();
+            ctx.moveTo(x + cornerRadius, y);
+            ctx.lineTo(x + width - cornerRadius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
+            ctx.lineTo(x + width, y + height - cornerRadius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - cornerRadius, y + height);
+            ctx.lineTo(x + cornerRadius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
+            ctx.lineTo(x, y + cornerRadius);
+            ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+            ctx.closePath();
+            
+            ctx.fill();
+            ctx.stroke();
+        } 
+        else{
+            ctx.fillRect(x, y, width, height);
+            ctx.strokeRect(x, y, width, height);
+        }
     }
-    
-    //doraditi logiku za pomeranje zmije, pravac kao parametar? 
+
 }

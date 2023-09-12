@@ -48,7 +48,9 @@ export function getFruit(type: string) : Observable<Fruit> {
                 console.log(response.statusText)
         })
         .catch(error => console.log(error))
-    )
+    ).pipe(
+        map(fruitArray => fruitArray[0])
+    );
 }
 
 export function getVegetable(type: string) : Observable<Vegetable> {
@@ -61,6 +63,8 @@ export function getVegetable(type: string) : Observable<Vegetable> {
                 console.log(response.statusText)
         })
         .catch(error => console.log(error))
-    )
+    ).pipe(
+        map(vegetableArray => vegetableArray[0])
+    );
 }
 

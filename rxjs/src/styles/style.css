@@ -77,7 +77,7 @@ body{
 }
 
 
-.shapeCheckboxes{
+.shapeRadioButtons{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -87,33 +87,21 @@ body{
     margin-top: -10px;
 }
 
-.shapeCheckboxContainer{
+.shapeRadioContainer{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.speedCheckboxes{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: -10px;
-}   
 
-.foodCheckboxes{
+.foodRadioButtons{
     width: 80%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     margin-top: -10px;
-}
-
-.speedCheckboxes{
-    margin-bottom: 10px;
 }
 
 #start-button{
