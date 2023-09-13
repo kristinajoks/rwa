@@ -112,14 +112,25 @@ body{
     font-weight: bold;
     border-radius: 15px;
     background-color:rgb(240, 73, 170);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+#start-button:active, #show-results-button:active{
+   
+    transform: scale(0.8);
 }
 
 .fruit{
     z-index: 1;
 }
 
-#fruitDiv, #vegetableDiv {
-    display: none;
+.fruitDiv, .vegetableDiv{
+    justify-content: space-around;
+}
+
+#fruitChbs, #vegChbs {
+    display: flex;
     justify-content: space-around;
     margin-top: 10px;
 }
@@ -146,11 +157,13 @@ body{
 }
 
 #show-results-button{
-    border-radius: 5px;
+    border-radius: 10px;
     height: 30px;
     width: 100%;
+    font-weight: bold;
     font-size: medium;
     background-color: lightblue;
+    cursor: pointer;
 }
 
 #shapeLabel, #foodLabel{

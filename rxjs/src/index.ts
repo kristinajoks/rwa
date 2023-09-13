@@ -1,9 +1,10 @@
 import { createGameLayout, draw} from "./view/initialView";
-import { fromEvent, filter, tap, map, distinctUntilChanged, scan, interval, combineLatest } from "rxjs";
+import { fromEvent, filter, tap, map, distinctUntilChanged, scan, interval, combineLatest, Subject, BehaviorSubject, switchMap, takeUntil, pluck, merge } from "rxjs";
+import { merge as mergeOperator } from "rxjs/operators";
 import { Snake } from "./models/snake";
 import { getFruit, getVegetable } from "./observables/apiservice";
 
-const snake = new Snake();
+var snake = new Snake();
 let slv;
 
 createGameLayout(document.body).pipe(
@@ -21,77 +22,93 @@ createGameLayout(document.body).pipe(
         const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 
         //observing settings
-        const slider$ = fromEvent(slider, 'input')
-        .subscribe((event: Event) => {
-            const sliderValue = (event.target as HTMLInputElement).value as unknown as number;
-            const sliderVal = document.getElementById('sliderValue') as HTMLSpanElement;
-            sliderVal.innerText = sliderValue.toString();
-            
-            snake.setDimension(sliderValue);
-            draw(canvas, sliderValue, snake);
-        });
 
+        const slider$ = fromEvent(slider, 'input')
+        .pipe(
+            pluck('target', 'value'),
+            tap((sliderValue : number) => {
+                const sliderVal = document.getElementById('sliderValue') as HTMLSpanElement;
+                sliderVal.innerText = sliderValue.toString();
+                console.log("izmenjena vrednost slider");
+
+                snake.setDimension(sliderValue);
+            })
+        ) 
 
         const shape$ = fromEvent(shapeRadioButtons, 'change')
-        .subscribe((event: Event) => {
-            const selectedShape = (event.target as HTMLInputElement).value;
+        .pipe(
+            pluck('target', 'value'),
+            tap((selectedShape : string) => {
+                console.log("izmenjena vrednost shape");
 
-            snake.setShape(selectedShape);    
-            
-            draw(canvas, slider.value as unknown as number, snake);
-        });
-
+                snake.setShape(selectedShape);    
+            })
+        )
 
         const food$ = fromEvent(foodRadioButtons, 'change')
-        .subscribe((event: Event) => {
-            const selectedFood = (event.target as HTMLInputElement).value;
+        .pipe(
+            pluck('target', 'value'),
+            tap((selectedFood : string) => {
+                console.log("izmenjena vrednost food");
 
-            if(selectedFood === 'fruit'){
-                snake.setFoodType('fruit');
-                fruitDiv.style.display = 'flex';
-                vegetableDiv.style.display = 'none'; 
-            }
-            else{
-                snake.setFoodType('vegetable');
-                fruitDiv.style.display = 'none';
-                vegetableDiv.style.display = 'flex'; 
-            }
+                snake.setFoodType(selectedFood);
+                snake.clearFood();
 
-            snake.clearFood(); //resetuje se hrana zbog promene tipa
-            draw(canvas, slider.value as unknown as number, snake);
-        });
+                if(selectedFood === 'fruit'){
+                    fruitDiv.style.display = 'flex';
+                    vegetableDiv.style.display = 'none'; 
+                }
+                else{
+                    fruitDiv.style.display = 'none';
+                    vegetableDiv.style.display = 'flex'; 
+                }
 
-        const fruitCheckboxes$ = fromEvent(fruitCheckboxes, 'change')
-        .subscribe(() => {
-            const checkedFruit = (event.target as HTMLInputElement).value;
+            })
+        )
 
-            if(snake.getFood().some(f => f.type === checkedFruit)){
-                snake.removeFood(checkedFruit);
-                draw(canvas, slider.value as unknown as number, snake);
-            }
-            else{
-                getFruit(checkedFruit).subscribe((fruit) => {
-                    snake.addFood(fruit);
-                    draw(canvas, slider.value as unknown as number, snake);
-                });
-            }
-        });
+        const fruitCheckboxes$ = fromEvent(fruitCheckboxes, 'change') 
+        .pipe(
+            pluck('target', 'value')            
+        )
 
         const vegetableCheckboxes$ = fromEvent(vegetableCheckboxes, 'change')
+        .pipe(
+            pluck('target', 'value')
+        )
+
+        const fruitVeg$ = fruitCheckboxes$.pipe(
+            mergeOperator(vegetableCheckboxes$),
+            tap((checkedFood : string) => {
+                console.log("izmenjena vrednost fruit/vegetable");
+
+                if(snake.getFood().some(f => f.type === checkedFood)){
+                    snake.removeFood(checkedFood);
+                }
+                else{
+                    if(snake.getFoodType() === 'fruit'){
+                        getFruit(checkedFood).subscribe((fruit) => {
+                            snake.addFood(fruit);
+                        });
+                    }
+                    else{
+                        getVegetable(checkedFood).subscribe((vegetable) => {
+                            snake.addFood(vegetable);
+                        });
+                    }
+                }
+            })
+        );
+
+
+       const draw$ = merge(
+            slider$,
+            shape$,
+            food$,
+            fruitVeg$
+        )
         .subscribe(() => {
-            const checkedVegetable = (event.target as HTMLInputElement).value;
-
-            if(snake.getFood().some(f => f.type === checkedVegetable)){
-                snake.removeFood(checkedVegetable);
-                draw(canvas, slider.value as unknown as number, snake);
-
-            }
-            else{
-                getVegetable(checkedVegetable).subscribe((vegetable) => {
-                    snake.addFood(vegetable);
-                    draw(canvas, slider.value as unknown as number, snake);
-                });
-            }        
+            
+            draw(canvas, slider.value as unknown as number, snake, true);
         });
 
 })
@@ -104,51 +121,140 @@ createGameLayout(document.body).pipe(
 
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 const slider = document.getElementById('slider') as HTMLInputElement;
-console.log(slider);
-console.log(slider.value);
+
 
 console.log(snake.getDimension());
+
+const gameControlFlow = new Subject();
 
 const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
     map((event) => event.key),
     distinctUntilChanged()
+    // takeUntil(gameControlFlow) 
   )
 
-keyDown$.subscribe((key) => {
-    if(key === 'ArrowUp' && snake.getDirection() !== 'down'){
-        snake.changeDirection('up');
-    }
-    else if(key === 'ArrowDown' && snake.getDirection() !== 'up'){
-        snake.changeDirection('down');
-    }
-    else if(key === 'ArrowLeft' && snake.getDirection() !== 'right'){
-        snake.changeDirection('left');
-    }
-    else if(key === 'ArrowRight' && snake.getDirection() !== 'left'){
-        snake.changeDirection('right');
-    }
+const interval$ = interval(600);
+const snakeMovement$ = combineLatest([keyDown$, interval$]).pipe(
+    map(([key, interval]) => key),
+    takeUntil(gameControlFlow)
+)
 
-    // console.log(snake.getBody());
-    // console.log(snake.getDirection());
-    // console.log(snake.getNextPosition());
 
-    snake.move();
-    console.log(snake.getBody());
-    draw(canvas, slider.value as unknown as number, snake);
+const startButton = document.getElementById('start-button') as HTMLButtonElement;
 
-    if(checkCollision(snake)){
-        console.log('game over');
-        // clearInterval(slv);
+//na klik dugmeta pocinje osluskivanje tastature
+const start$ = fromEvent(startButton, 'click').pipe(
+    tap( () => {
+        disableControls();
+    }),
+    switchMap(() => snakeMovement$)
+).subscribe( 
+    (key) => {
+        if(key === 'ArrowUp' && snake.getDirection() !== 'down'){
+            snake.changeDirection('up');
+        }
+        else if(key === 'ArrowDown' && snake.getDirection() !== 'up'){
+            snake.changeDirection('down');
+        }
+        else if(key === 'ArrowLeft' && snake.getDirection() !== 'right'){
+            snake.changeDirection('left');
+        }
+        else if(key === 'ArrowRight' && snake.getDirection() !== 'left'){
+            snake.changeDirection('right');
+        }
+
+        const {eaten, collided} = snake.move(canvas);
+
+        if(collided){
+            alert('game over');
+            gameControlFlow.next(null);
+
+            enableControls();
+
+            snake = new Snake();
+            draw(canvas, slider.value as unknown as number, snake, true); 
+        }
+        else{
+            //ako se nije sudarila, proveri da li je pojedena hrana, ako jeste onda se salje signal da se crta voce
+            draw(canvas, slider.value as unknown as number, snake, eaten);
+        }
+
+        //NE STAJE NA GRANICI CANVASA I VOCE NESTAJE CIM SE POMERI ZMIJA
+
+
+        // if(snake.checkCollision(canvas)){
+        //     //mogu da izmenim snake move da proveri koliziju prvo i da vraca true ili false i onda ovde da izmenim to
+        //     //a u move kad se proverava kolizija taman da se proveri da li je sudar sa telom pre nego sto se pomeri
+        //     //i u snake da dodam metodu koja proverava da li je nextPosition pozicija currentFood, pa ako jeste
+        //     //da se ne brise rep nego da se samo doda novi element na kraj niza i da se nekako oznaci da je pojedeno voce,
+        //     //npr ili polje u klasi kao eaten pa da se ono prosledi i na osnovu njega u draw fji zove drawFood 
+        //     //ili da postoji neki observable koji ce da prati da li je se voce jede
+            
+        //     alert('game over');
+        //     gameControlFlow.next(null);
+
+        //     enableControls();
+
+        //     snake = new Snake();
+        //     draw(canvas, slider.value as unknown as number, snake); 
+        // }
+        // else{
+        //     snake.move(canvas);
+        //     // console.log(snake.getBody());
+        //     draw(canvas, slider.value as unknown as number, snake); //podesiti da se ne crta voce ako nije pojedeno
+
+        //     // console.log(snake.getCurrentFood());
+        // }
     }
-});
+);
+
+
+//za sada duplirani kod za preuzimanje elemenata ali isprobacu kasnije da ih podignem na vrh i izbacim def iz prvog obs
+const shapeRadioButtons = document.querySelectorAll('input[name="shapes"]') as unknown as HTMLInputElement[];
+const foodRadioButtons = document.querySelectorAll('input[name="food"]') as unknown as HTMLInputElement[];
+const fruitCheckboxes = document.querySelectorAll('input[name="fruit"]') as unknown as HTMLInputElement[];
+const vegetableCheckboxes = document.querySelectorAll('input[name="vegetable"]') as unknown as HTMLInputElement[];
+
+function disableControls() { //tu nesto ne radi za ostale odjednom ali tako je kako je
+    startButton.disabled = true;
+
+    slider.disabled = true;
     
+    shapeRadioButtons.forEach((shape) => {
+        shape.disabled = true;
+    });
 
-function checkCollision(snake: Snake) : boolean{
-    if(snake.getNextPosition().x === canvas.width / snake.getDimension() 
-    || snake.getNextPosition().y === canvas.height / snake.getDimension() 
-    || snake.getNextPosition().x < 0 
-    || snake.getNextPosition().y < 0)
-        return true;
-    else
-        return false;
+    foodRadioButtons.forEach((food) => {
+        food.disabled = true;
+    });
+
+    fruitCheckboxes.forEach((fruit) => {
+        fruit.disabled = true;
+    });
+
+    vegetableCheckboxes.forEach((vegetable) => {
+        vegetable.disabled = true;
+    });
+}
+
+function enableControls(){
+    startButton.disabled = false;
+
+    slider.disabled = false;
+    
+    shapeRadioButtons.forEach((shape) => {
+        shape.disabled = false;
+    });
+
+    foodRadioButtons.forEach((food) => {
+        food.disabled = false;
+    });
+
+    fruitCheckboxes.forEach((fruit) => {
+        fruit.disabled = false;
+    });
+
+    vegetableCheckboxes.forEach((vegetable) => {
+        vegetable.disabled = false;
+    });
 }

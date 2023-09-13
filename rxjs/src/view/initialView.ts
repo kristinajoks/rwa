@@ -41,7 +41,7 @@ export function createGameLayout(body: HTMLElement) {
     gameContainer.appendChild(canvas);
 
     //INICIJALNO ISCRTAVANJE
-    draw(canvas, 10, new Snake());
+    draw(canvas, 10, new Snake(), true);
 
     const rightContainer = document.createElement('div');
     rightContainer.classList.add('right-container');
@@ -59,7 +59,6 @@ export function createGameLayout(body: HTMLElement) {
             createFood(response.food, response.fruit, response.vegetable, 'foodDiv');
         })
     );
-    // return returnObservable;
 
     leftContainer.appendChild(settingsSection);
   
@@ -266,7 +265,7 @@ function createFood(food: {id: number; type: string}[], //async
     vegetableDiv.style.display = 'none';
 }
 
-export function draw(canvas: HTMLCanvasElement, dimension: number, snake: Snake){
+export function draw(canvas: HTMLCanvasElement, dimension: number, snake: Snake, drawNewFood: boolean){
     const width = canvas.width / dimension;
     const height = canvas.height / dimension;
 
@@ -274,10 +273,13 @@ export function draw(canvas: HTMLCanvasElement, dimension: number, snake: Snake)
 
     if(!ctx) return;
 
+    console.log("crtam");
+    console.log(snake.getFood());
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawGrid(ctx, canvas.width, canvas.height, width, height);
-    drawFood(ctx, canvas.width, canvas.height, width, height, dimension, snake);
+    drawFood(ctx, canvas.width, canvas.height, width, height, dimension, snake, drawNewFood);
     drawSnake(ctx, canvas.width, canvas.height, width, height, dimension, snake);
 }
 
@@ -300,65 +302,91 @@ function drawGrid(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: 
     }
 }
 
-function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake) : {x: number, y: number}
+function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake, drawNewFood: boolean)
 {
+    //ako je drawNewFood onda se generise sve i src i pozicija 
+    //a ako nije onda iscrta ono sto 
+ 
     let x = 0;
     let y = 0;
 
-    //DODATI LOGIKU ZA PREUZIMANJE NIZA HRANE, I AKO IMA VISE ONDA BIRANJE NEKE RANDOM OD NJIH
-    //ako je prazan, nacrtati jabuku
-    //ako nije, nacrtati random od njih
-
-    let src;
-    const foodArray = snake.getFood();
-
-    if(foodArray.length === 0){
-        src = snake.getFoodType() === 'fruit' ? 'apple' : 'carrot';
-    }
-    else if(foodArray.length === 1){
-        src = foodArray[0].type;
-    }
-    else{
-        const random = Math.floor(Math.random() * foodArray.length);
-        src = foodArray[random].type;
-    }
-
+    let type : string;
+    
+    
     const food = new Image();
-    food.src = "src\\assets\\" + src + ".png";
 
-    food.onload = () => {
-        var rand1;
-        var rand2;
-        let taken;
+    //ukoliko nema potrebe za generisanje nove hrane
+    if(!drawNewFood){
+        x = snake.getCurrentFood().x;
+        y = snake.getCurrentFood().y;
+        type = snake.getCurrentFood().type;
 
-        do{
-            taken = false;
-            rand1 = Math.floor(Math.random() * dimension) ;
-            rand2 = Math.floor(Math.random() * dimension) ; 
-            
-            console.log(rand1, rand2);
+        //za sad dupliranje ali nebitno sredicu
 
-            //ako je zmija na tom polju, ponovo generisanje            
-            x = rand1;
-            y = rand2;
-            
-            for(const segment of snake.getBody()){
-                if(segment.x === rand1 && segment.y === rand2){
-                    taken = true;
-                    break;
+        console.log("crtam hranu staru");
+        console.log(snake.getCurrentFood());
+
+        food.src = "src\\assets\\" + type + ".png";
+        food.onload = () => {
+
+            ctx.drawImage(food, x * width, y * height, width, height);
+        }
+        return;
+    }
+    else{ //
+        console.log("crtam hranu novu");
+        console.log("telo zmije nakon jedenja hrane");
+        console.log(snake.getBody());
+
+        const foodArray = snake.getFood();
+        if(foodArray.length === 0){
+            type = snake.getFoodType() === 'fruit' ? 'apple' : 'carrot';
+        }
+        else if(foodArray.length === 1){
+            type = foodArray[0].type;
+        }
+        else{
+            const random = Math.floor(Math.random() * foodArray.length);
+            type = foodArray[random].type;
+        }
+
+        food.src = "src\\assets\\" + type + ".png";
+
+        food.onload = () => {
+            var rand1;
+            var rand2;
+            let taken;
+
+            do{
+                taken = false;
+                rand1 = Math.floor(Math.random() * dimension) ;
+                rand2 = Math.floor(Math.random() * dimension) ; 
+                
+                // console.log(rand1, rand2);
+
+                //ako je zmija na tom polju, ponovo generisanje            
+                x = rand1;
+                y = rand2;
+
+                snake.setCurrentFood({x, y, type});
+                console.log(snake.getCurrentFood());
+                
+                for(const segment of snake.getBody()){
+                    if(segment.x === rand1 && segment.y === rand2){ //ovde
+                        taken = true;
+                        break;
+                    }
                 }
-            }
 
-        }while(taken);
+            }while(taken);
 
         ctx.drawImage(food, rand1 * width, rand2 * height, width, height);
     }
-
+    //
+    }
     //proveri sta ces za boju
     //doraditi
-    
-    return {x, y};
-}
+    }
 
 function drawSnake(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake) 
 {
@@ -367,7 +395,7 @@ function drawSnake(ctx: CanvasRenderingContext2D, cw: number, ch: number, width:
     ctx.lineWidth = 1.5;
 
     for(const segment of snake.getBody()){
-        const x = segment.x * width;
+        const x = segment.x * width; //i ovde
         const y = segment.y * height;
 
         if(snake.getShape() === 'round'){
