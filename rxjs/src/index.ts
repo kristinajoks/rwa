@@ -1,6 +1,6 @@
 import { createGameLayout, draw} from "./view/initialView";
 import { fromEvent, filter, tap, map, distinctUntilChanged, scan, interval, combineLatest, Subject, BehaviorSubject, switchMap, takeUntil, pluck, merge, of } from "rxjs";
-import { mapTo, max, merge as mergeOperator, shareReplay, withLatestFrom } from "rxjs/operators";
+import { mapTo, merge as mergeOperator } from "rxjs/operators";
 import { Snake } from "./models/snake";
 import { getFruit, getVegetable } from "./observables/apiservice";
 
@@ -42,7 +42,6 @@ createGameLayout(document.body).pipe(
             tap((sliderValue : number) => {
                 const sliderVal = document.getElementById('sliderValue') as HTMLSpanElement;
                 sliderVal.innerText = sliderValue.toString();
-                console.log("izmenjena vrednost slider");
 
                 snake.setDimension(sliderValue);
             })
@@ -52,8 +51,6 @@ createGameLayout(document.body).pipe(
         .pipe(
             pluck('target', 'value'),
             tap((selectedShape : string) => {
-                console.log("izmenjena vrednost shape");
-
                 snake.setShape(selectedShape);    
             })
         )
@@ -62,8 +59,6 @@ createGameLayout(document.body).pipe(
         .pipe(
             pluck('target', 'value'),
             tap((selectedFood : string) => {
-                console.log("izmenjena vrednost food");
-
                 snake.setFoodType(selectedFood);
                 snake.clearFood();
 
@@ -311,5 +306,5 @@ function enableControls(){
     });
 
     shapeRadioButtons[0].checked = true;
-    foodRadioButtons[0].checked = true;
+    // foodRadioButtons[0].checked = true;
 }

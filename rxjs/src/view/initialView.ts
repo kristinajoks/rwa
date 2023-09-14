@@ -83,10 +83,6 @@ export function createGameLayout(body: HTMLElement) {
 
     rightContainer.appendChild(resultsSection);
 
-    // showResultsButton.addEventListener('click', () => {
-    //   resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
-    // });
-
     return returnObservable;
 }
 
