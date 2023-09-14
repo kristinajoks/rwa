@@ -9,14 +9,14 @@
     ],
     "fruit" : [
         { "id": 1, "type": "apple", "color": "red" },
-        { "id": 2, "type": "cherry", "color": "dark red" },
+        { "id": 2, "type": "cherry", "color": "darkred" },
         { "id": 3, "type": "plum", "color": "purple" },
-        { "id": 4, "type": "raspberry", "color": "pink" }
+        { "id": 4, "type": "raspberry", "color": "deeppink" }
     ],
     "vegetable" : [
         { "id": 1, "type": "carrot", "color": "orange" },
-        { "id": 2, "type": "cabbage", "color": "dark green" },
-        { "id": 3, "type": "cucumber", "color": "light green" },
+        { "id": 2, "type": "cabbage", "color": "lightgreen" },
+        { "id": 3, "type": "cucumber", "color": "darkgreen" },
         { "id": 4, "type": "eggplant", "color": "purple" }
     ]
   }

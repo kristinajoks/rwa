@@ -40,7 +40,7 @@ export function createGameLayout(body: HTMLElement) {
     canvas.id = 'game-canvas'; 
     gameContainer.appendChild(canvas);
 
-    //INICIJALNO ISCRTAVANJE
+    //inicijalno iscrtavanje
     draw(canvas, 10, new Snake(), true);
 
     const rightContainer = document.createElement('div');
@@ -75,22 +75,112 @@ export function createGameLayout(body: HTMLElement) {
   
     const resultsSection = document.createElement('div');
     resultsSection.classList.add('results-section');
+    resultsSection.id = 'results-section';
     resultsSection.style.display = 'none';
   
     //display results
-  
+    createResults(resultsSection);
 
     rightContainer.appendChild(resultsSection);
 
-    showResultsButton.addEventListener('click', () => {
-      resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
-    });
+    // showResultsButton.addEventListener('click', () => {
+    //   resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
+    // });
 
     return returnObservable;
 }
 
+function createResults(resultsSection: HTMLDivElement){
+    const currentScoreDiv = document.createElement('div');
+    currentScoreDiv.classList.add('current-score-div');
+    currentScoreDiv.id = 'current-score-div';
+    resultsSection.appendChild(currentScoreDiv);
+
+    const bestScoreDiv = document.createElement('div');
+    bestScoreDiv.classList.add('best-score-div');
+    bestScoreDiv.id = 'best-score-div';
+    resultsSection.appendChild(bestScoreDiv);
+
+    const currentScore = document.createElement('h3');
+    currentScore.classList.add('current-score');
+    currentScore.textContent = 'Current Score';
+    currentScoreDiv.appendChild(currentScore);
+
+    const csDiv = document.createElement('div');
+    csDiv.classList.add('cs-div');
+    currentScoreDiv.appendChild(csDiv);
+
+    const csImg = document.createElement('img');
+    csImg.classList.add('cs-img');
+    csImg.id = 'cs-img';
+    csImg.src = 'src\\assets\\apple.png';
+    csImg.alt = 'apple';
+    csDiv.appendChild(csImg);
+    
+    const currentScoreValue = document.createElement('span');
+    currentScoreValue.classList.add('current-score-value');
+    currentScoreValue.id = 'current-score-value';
+    currentScoreValue.textContent = '0';
+    csDiv.appendChild(currentScoreValue);
+
+    const bestScore = document.createElement('h3');
+    bestScore.classList.add('best-score');
+    bestScore.textContent = 'Best Score';
+    bestScoreDiv.appendChild(bestScore);
+
+    const bsDiv = document.createElement('div');
+    bsDiv.classList.add('bs-div');
+    bestScoreDiv.appendChild(bsDiv);
+
+    const bsImg = document.createElement('img');
+    bsImg.classList.add('bs-img');
+    bsImg.id = 'bs-img';
+    bsImg.src = 'src\\assets\\king.png';
+    bsImg.alt = 'crown';
+    bsDiv.appendChild(bsImg);
+
+    const bestScoreValue = document.createElement('span');
+    bestScoreValue.classList.add('best-score-value');
+    bestScoreValue.id = 'best-score-value';
+    bestScoreValue.textContent = '0';
+    bsDiv.appendChild(bestScoreValue);
+
+    const rulesDiv = document.createElement('div');
+    rulesDiv.classList.add('rules-div');
+    resultsSection.appendChild(rulesDiv);
+
+    const rules = document.createElement('h3');
+    rules.classList.add('rules');
+    rules.textContent = 'Rules';
+    rulesDiv.appendChild(rules);
+
+    const rulesList = document.createElement('ul');
+    rulesList.classList.add('rules-list');
+    rulesDiv.appendChild(rulesList);
+
+    const rule1 = document.createElement('li');
+    rule1.classList.add('rule1');
+    rule1.textContent = 'Eat food to grow';
+    rulesList.appendChild(rule1);
+
+    const rule2 = document.createElement('li');
+    rule2.classList.add('rule2');
+    rule2.textContent = 'Avoid walls and your tail';
+    rulesList.appendChild(rule2);
+
+    const rule3 = document.createElement('li');
+    rule3.classList.add('rule3');
+    rule3.textContent = 'Change settings to make the game more interesting';
+    rulesList.appendChild(rule3);
+
+    const rule4 = document.createElement('li');
+    rule4.classList.add('rule4');
+    rule4.textContent = 'Have fun!';
+    rulesList.appendChild(rule4);
+    
+}
+
 function createSettings(settingsSection : HTMLDivElement){
-    //
     const dimDiv = document.createElement('div');
     dimDiv.classList.add('dimDiv');
     dimDiv.id = 'dimDiv';
@@ -116,9 +206,7 @@ function createSettings(settingsSection : HTMLDivElement){
     vegetableDiv.classList.add('vegetableDiv');
     vegetableDiv.id = 'vegetableDiv';
     settingsSection.appendChild(vegetableDiv);
-    //kreirani divovi
 
-    //nevezano za bazu, popunjeno odmah
     const dimension = document.createElement('h3');
     dimension.classList.add('dimension');
     dimension.textContent = 'Dimension';
@@ -138,8 +226,6 @@ function createSettings(settingsSection : HTMLDivElement){
     sliderValue.id = 'sliderValue';
     sliderValue.textContent = '10';
     dimDiv.appendChild(sliderValue);
-
- //
    
 }
 
@@ -273,13 +359,10 @@ export function draw(canvas: HTMLCanvasElement, dimension: number, snake: Snake,
 
     if(!ctx) return;
 
-    console.log("crtam");
-    console.log(snake.getFood());
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawGrid(ctx, canvas.width, canvas.height, width, height);
-    drawFood(ctx, canvas.width, canvas.height, width, height, dimension, snake, drawNewFood);
+    drawFood(ctx, width, height, dimension, snake, drawNewFood);
     drawSnake(ctx, canvas.width, canvas.height, width, height, dimension, snake);
 }
 
@@ -302,18 +385,15 @@ function drawGrid(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: 
     }
 }
 
-function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake, drawNewFood: boolean)
-{
-    //ako je drawNewFood onda se generise sve i src i pozicija 
-    //a ako nije onda iscrta ono sto 
- 
+function drawFood(ctx: CanvasRenderingContext2D, width: number, height: number, dimension: number, snake: Snake, drawNewFood: boolean)
+{ 
     let x = 0;
     let y = 0;
 
     let type : string;
-    
-    
+  
     const food = new Image();
+
 
     //ukoliko nema potrebe za generisanje nove hrane
     if(!drawNewFood){
@@ -321,33 +401,26 @@ function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: 
         y = snake.getCurrentFood().y;
         type = snake.getCurrentFood().type;
 
-        //za sad dupliranje ali nebitno sredicu
-
         console.log("crtam hranu staru");
         console.log(snake.getCurrentFood());
 
         food.src = "src\\assets\\" + type + ".png";
         food.onload = () => {
-
             ctx.drawImage(food, x * width, y * height, width, height);
         }
         return;
     }
-    else{ //
-        console.log("crtam hranu novu");
-        console.log("telo zmije nakon jedenja hrane");
-        console.log(snake.getBody());
+    else{ 
 
-        const foodArray = snake.getFood();
-        if(foodArray.length === 0){
+        if(snake.getFood().length === 0){
             type = snake.getFoodType() === 'fruit' ? 'apple' : 'carrot';
         }
-        else if(foodArray.length === 1){
-            type = foodArray[0].type;
+        else if(snake.getFood().length === 1){
+            type = snake.getFood()[0].type;
         }
         else{
-            const random = Math.floor(Math.random() * foodArray.length);
-            type = foodArray[random].type;
+            const random = Math.floor(Math.random() * snake.getFood().length);
+            type = snake.getFood()[random].type;
         }
 
         food.src = "src\\assets\\" + type + ".png";
@@ -361,65 +434,71 @@ function drawFood(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: 
                 taken = false;
                 rand1 = Math.floor(Math.random() * dimension) ;
                 rand2 = Math.floor(Math.random() * dimension) ; 
-                
-                // console.log(rand1, rand2);
 
                 //ako je zmija na tom polju, ponovo generisanje            
                 x = rand1;
                 y = rand2;
 
                 snake.setCurrentFood({x, y, type});
-                console.log(snake.getCurrentFood());
                 
                 for(const segment of snake.getBody()){
-                    if(segment.x === rand1 && segment.y === rand2){ //ovde
-                        taken = true;
-                        break;
+                    if(segment){
+                        if(segment.x === rand1 && segment.y === rand2){
+                            taken = true;
+                            break;
+                        }
                     }
                 }
 
             }while(taken);
 
         ctx.drawImage(food, rand1 * width, rand2 * height, width, height);
+        }
     }
-    //
-    }
-    //proveri sta ces za boju
-    //doraditi
-    }
+}
 
 function drawSnake(ctx: CanvasRenderingContext2D, cw: number, ch: number, width: number, height: number, dimension: number, snake: Snake) 
 {
-    ctx.fillStyle = snake.getColor();
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1.5;
 
+    let i = 0;
+
     for(const segment of snake.getBody()){
-        const x = segment.x * width; //i ovde
-        const y = segment.y * height;
+        if(segment){
 
-        if(snake.getShape() === 'round'){
-            const cornerRadius = Math.min(width, height) / 1.5;
-            
-            ctx.beginPath();
-            ctx.moveTo(x + cornerRadius, y);
-            ctx.lineTo(x + width - cornerRadius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
-            ctx.lineTo(x + width, y + height - cornerRadius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - cornerRadius, y + height);
-            ctx.lineTo(x + cornerRadius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
-            ctx.lineTo(x, y + cornerRadius);
-            ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
-            ctx.closePath();
-            
-            ctx.fill();
-            ctx.stroke();
-        } 
-        else{
-            ctx.fillRect(x, y, width, height);
-            ctx.strokeRect(x, y, width, height);
+            const x = segment.x * width;
+            const y = segment.y * height;
+
+            if( i == 0)
+                ctx.fillStyle = 'dimgray';
+            else
+                ctx.fillStyle = snake.getColor();
+
+            if(snake.getShape() === 'round'){
+                const cornerRadius = Math.min(width, height) / 1.5;
+                
+                ctx.beginPath();
+                ctx.moveTo(x + cornerRadius, y);
+                ctx.lineTo(x + width - cornerRadius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
+                ctx.lineTo(x + width, y + height - cornerRadius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - cornerRadius, y + height);
+                ctx.lineTo(x + cornerRadius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
+                ctx.lineTo(x, y + cornerRadius);
+                ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+                ctx.closePath();
+                
+                ctx.fill();
+                ctx.stroke();
+            } 
+            else{
+                ctx.fillRect(x, y, width, height);
+                ctx.strokeRect(x, y, width, height);
+            }
+
+            i++;
         }
-    }
-
+    } 
 }

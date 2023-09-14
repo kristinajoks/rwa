@@ -67,4 +67,3 @@ export function getVegetable(type: string) : Observable<Vegetable> {
         map(vegetableArray => vegetableArray[0])
     );
 }
-

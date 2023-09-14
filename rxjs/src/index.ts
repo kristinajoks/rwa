@@ -1,25 +1,38 @@
 import { createGameLayout, draw} from "./view/initialView";
-import { fromEvent, filter, tap, map, distinctUntilChanged, scan, interval, combineLatest, Subject, BehaviorSubject, switchMap, takeUntil, pluck, merge } from "rxjs";
-import { merge as mergeOperator } from "rxjs/operators";
+import { fromEvent, filter, tap, map, distinctUntilChanged, scan, interval, combineLatest, Subject, BehaviorSubject, switchMap, takeUntil, pluck, merge, of } from "rxjs";
+import { mapTo, max, merge as mergeOperator, shareReplay, withLatestFrom } from "rxjs/operators";
 import { Snake } from "./models/snake";
 import { getFruit, getVegetable } from "./observables/apiservice";
 
 var snake = new Snake();
-let slv;
+
+let canvas : HTMLCanvasElement;
+let slider : HTMLInputElement;
+let csImg : HTMLImageElement;
+let startButton : HTMLButtonElement;
+let csSpan : HTMLSpanElement;
+let bsSpan : HTMLSpanElement;
+let showResultsButton : HTMLButtonElement;
+let resultsSection : HTMLDivElement;
+let shapeRadioButtons : NodeListOf<HTMLInputElement>;
+let foodRadioButtons : NodeListOf<HTMLInputElement>;
+let fruitDiv : HTMLDivElement;
+let vegetableDiv : HTMLDivElement;
+let fruitCheckboxes : NodeListOf<HTMLInputElement>;
+let vegetableCheckboxes : NodeListOf<HTMLInputElement>;
 
 createGameLayout(document.body).pipe(
     tap((x) => {
-
-        const slider = document.getElementById('slider') as HTMLInputElement; 
-        const shapeRadioButtons = document.querySelectorAll('input[name="shapes"]'); 
-        const foodRadioButtons = document.querySelectorAll('input[name="food"]'); 
-
-        const fruitDiv = document.getElementById('fruitDiv') as HTMLDivElement;
-        const vegetableDiv = document.getElementById('vegetableDiv') as HTMLDivElement;
-        const fruitCheckboxes = document.querySelectorAll('input[name="fruit"]'); 
-        const vegetableCheckboxes = document.querySelectorAll('input[name="vegetable"]'); 
-
-        const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
+        shapeRadioButtons = document.querySelectorAll('input[name="shapes"]'); 
+        foodRadioButtons = document.querySelectorAll('input[name="food"]'); 
+        fruitDiv = document.getElementById('fruitDiv') as HTMLDivElement;
+        vegetableDiv = document.getElementById('vegetableDiv') as HTMLDivElement;
+        fruitCheckboxes = document.querySelectorAll('input[name="fruit"]'); 
+        vegetableCheckboxes = document.querySelectorAll('input[name="vegetable"]'); 
+        
+        slider = document.getElementById('slider') as HTMLInputElement; 
+        canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
+        csImg = document.getElementById('cs-img') as HTMLImageElement;
 
         //observing settings
 
@@ -57,12 +70,15 @@ createGameLayout(document.body).pipe(
                 if(selectedFood === 'fruit'){
                     fruitDiv.style.display = 'flex';
                     vegetableDiv.style.display = 'none'; 
+
+                    csImg.src = 'src\\assets\\apple.png';
                 }
                 else{
                     fruitDiv.style.display = 'none';
-                    vegetableDiv.style.display = 'flex'; 
+                    vegetableDiv.style.display = 'flex';
+                    
+                    csImg.src = 'src\\assets\\carrot.png';
                 }
-
             })
         )
 
@@ -79,24 +95,26 @@ createGameLayout(document.body).pipe(
         const fruitVeg$ = fruitCheckboxes$.pipe(
             mergeOperator(vegetableCheckboxes$),
             tap((checkedFood : string) => {
-                console.log("izmenjena vrednost fruit/vegetable");
-
-                if(snake.getFood().some(f => f.type === checkedFood)){
+                if(snake.getFood().some(f => f.type === checkedFood)){ 
                     snake.removeFood(checkedFood);
                 }
-                else{
-                    if(snake.getFoodType() === 'fruit'){
-                        getFruit(checkedFood).subscribe((fruit) => {
+            }),
+            switchMap((checkedFood) => {
+                if(snake.getFoodType() == 'fruit'){
+                    return getFruit(checkedFood).pipe(
+                        tap((fruit) => {
                             snake.addFood(fruit);
-                        });
-                    }
-                    else{
-                        getVegetable(checkedFood).subscribe((vegetable) => {
-                            snake.addFood(vegetable);
-                        });
-                    }
+                        })
+                    );
                 }
-            })
+                else{
+                    return getVegetable(checkedFood).pipe(
+                        tap((vegetable) => {
+                            snake.addFood(vegetable);
+                        })
+                    );
+                }
+            })            
         );
 
 
@@ -106,31 +124,27 @@ createGameLayout(document.body).pipe(
             food$,
             fruitVeg$
         )
-        .subscribe(() => {
-            
+        .subscribe(() => {            
             draw(canvas, slider.value as unknown as number, snake, true);
         });
-
-})
+    })
 ).subscribe();
-
-
 
 
 //logika pomeranja zmije
 
-const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
-const slider = document.getElementById('slider') as HTMLInputElement;
-
-
-console.log(snake.getDimension());
-
 const gameControlFlow = new Subject();
+var currentPoints = new Subject();
+var currentPoints$ = currentPoints.asObservable();
+
+const restartGameSignal = new Subject();
+
+var bestScore = new BehaviorSubject(0);
+var bestScore$ = bestScore.asObservable();
 
 const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
     map((event) => event.key),
     distinctUntilChanged()
-    // takeUntil(gameControlFlow) 
   )
 
 const interval$ = interval(600);
@@ -139,10 +153,8 @@ const snakeMovement$ = combineLatest([keyDown$, interval$]).pipe(
     takeUntil(gameControlFlow)
 )
 
+startButton = document.getElementById('start-button') as HTMLButtonElement;
 
-const startButton = document.getElementById('start-button') as HTMLButtonElement;
-
-//na klik dugmeta pocinje osluskivanje tastature
 const start$ = fromEvent(startButton, 'click').pipe(
     tap( () => {
         disableControls();
@@ -163,63 +175,99 @@ const start$ = fromEvent(startButton, 'click').pipe(
             snake.changeDirection('right');
         }
 
-        const {eaten, collided} = snake.move(canvas);
-
-        if(collided){
-            alert('game over');
-            gameControlFlow.next(null);
-
-            enableControls();
-
-            snake = new Snake();
-            draw(canvas, slider.value as unknown as number, snake, true); 
-        }
-        else{
-            //ako se nije sudarila, proveri da li je pojedena hrana, ako jeste onda se salje signal da se crta voce
-            draw(canvas, slider.value as unknown as number, snake, eaten);
-        }
-
-        //NE STAJE NA GRANICI CANVASA I VOCE NESTAJE CIM SE POMERI ZMIJA
-
-
-        // if(snake.checkCollision(canvas)){
-        //     //mogu da izmenim snake move da proveri koliziju prvo i da vraca true ili false i onda ovde da izmenim to
-        //     //a u move kad se proverava kolizija taman da se proveri da li je sudar sa telom pre nego sto se pomeri
-        //     //i u snake da dodam metodu koja proverava da li je nextPosition pozicija currentFood, pa ako jeste
-        //     //da se ne brise rep nego da se samo doda novi element na kraj niza i da se nekako oznaci da je pojedeno voce,
-        //     //npr ili polje u klasi kao eaten pa da se ono prosledi i na osnovu njega u draw fji zove drawFood 
-        //     //ili da postoji neki observable koji ce da prati da li je se voce jede
-            
-        //     alert('game over');
-        //     gameControlFlow.next(null);
-
-        //     enableControls();
-
-        //     snake = new Snake();
-        //     draw(canvas, slider.value as unknown as number, snake); 
-        // }
-        // else{
-        //     snake.move(canvas);
-        //     // console.log(snake.getBody());
-        //     draw(canvas, slider.value as unknown as number, snake); //podesiti da se ne crta voce ako nije pojedeno
-
-        //     // console.log(snake.getCurrentFood());
-        // }
+        gameLoop();
     }
 );
 
+//prikazivanje rezultata
 
-//za sada duplirani kod za preuzimanje elemenata ali isprobacu kasnije da ih podignem na vrh i izbacim def iz prvog obs
-const shapeRadioButtons = document.querySelectorAll('input[name="shapes"]') as unknown as HTMLInputElement[];
-const foodRadioButtons = document.querySelectorAll('input[name="food"]') as unknown as HTMLInputElement[];
-const fruitCheckboxes = document.querySelectorAll('input[name="fruit"]') as unknown as HTMLInputElement[];
-const vegetableCheckboxes = document.querySelectorAll('input[name="vegetable"]') as unknown as HTMLInputElement[];
+showResultsButton = document.getElementById('show-results-button') as HTMLButtonElement;
+const showResults$ = fromEvent(showResultsButton, 'click').pipe(
+    tap(() => {
+        resultsSection = document.getElementById('results-section') as HTMLDivElement;
+        resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
+    })
+).subscribe();
 
-function disableControls() { //tu nesto ne radi za ostale odjednom ali tako je kako je
+
+let currentScore = 0;
+let currentMaxScore = 0;
+
+function gameLoop(){
+    const {eaten, collided} = snake.move(canvas);
+        
+    currentPoints.next(eaten);
+
+    csSpan = document.getElementById('current-score-value') as HTMLSpanElement;
+    currentScore = parseInt(csSpan.innerText);
+
+    shapeRadioButtons = document.querySelectorAll('input[name="shapes"]'); 
+    foodRadioButtons = document.querySelectorAll('input[name="food"]'); 
+    fruitDiv = document.getElementById('fruitDiv') as HTMLDivElement;
+    vegetableDiv = document.getElementById('vegetableDiv') as HTMLDivElement;
+    fruitCheckboxes = document.querySelectorAll('input[name="fruit"]'); 
+    vegetableCheckboxes = document.querySelectorAll('input[name="vegetable"]'); 
+
+
+    if(collided){
+        alert('GAME OVER');
+        gameControlFlow.next(null);
+
+        //prvo se posalje vrednost, a zatim gasi tok
+        bestScore.next(currentScore);
+        
+        restartGameSignal.next(null); 
+
+        snake = new Snake();
+        snake.setDimension(slider.value as unknown as number);
+
+        enableControls();
+        
+        draw(canvas, slider.value as unknown as number, snake, true); 
+    }
+    else{
+        draw(canvas, slider.value as unknown as number, snake, eaten);
+    }
+}
+
+const points$ = currentPoints$.pipe(
+    filter((eaten) => eaten == true),
+    mapTo(1)
+);
+
+const resetCurrentPoints$ = restartGameSignal.pipe(
+    switchMap(() => of(0))
+);
+
+const mergedPoints$ = merge(
+    points$,
+    resetCurrentPoints$
+).pipe(
+    scan((acc, curr) => (curr === 0 ? curr: acc + curr), 0)
+);
+
+const subForPoints = mergedPoints$.subscribe((points) => {
+    currentScore = points; 
+
+    csSpan = document.getElementById('current-score-value') as HTMLSpanElement;
+    csSpan.innerText = points.toString();
+});
+
+const subForBest = bestScore$.pipe(
+    filter((bestScore) => bestScore > currentMaxScore)
+).subscribe((bestScore) => {
+    currentMaxScore = bestScore;
+
+    bsSpan = document.getElementById('best-score-value') as HTMLSpanElement;
+    bsSpan.innerText = bestScore.toString();
+});
+
+
+function disableControls() { 
     startButton.disabled = true;
 
     slider.disabled = true;
-    
+
     shapeRadioButtons.forEach((shape) => {
         shape.disabled = true;
     });
@@ -241,20 +289,27 @@ function enableControls(){
     startButton.disabled = false;
 
     slider.disabled = false;
-    
+
     shapeRadioButtons.forEach((shape) => {
         shape.disabled = false;
+        shape.checked = false;
     });
 
     foodRadioButtons.forEach((food) => {
         food.disabled = false;
+        food.checked = false;
     });
 
     fruitCheckboxes.forEach((fruit) => {
         fruit.disabled = false;
+        fruit.checked = false;
     });
 
     vegetableCheckboxes.forEach((vegetable) => {
         vegetable.disabled = false;
+        vegetable.checked = false;
     });
+
+    shapeRadioButtons[0].checked = true;
+    foodRadioButtons[0].checked = true;
 }

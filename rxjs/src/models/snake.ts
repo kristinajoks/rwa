@@ -32,24 +32,13 @@ export class Snake {
             //ZA SADA NIJE OBS
 
     move(canvas: HTMLCanvasElement) : {eaten: boolean, collided: boolean}{ //vraca da li je pojela hranu ili ne
-        //znaci treba da mi bude na 1 ono sto je bilo na 0
-        //ako je hrana pojedena, dodajemo novi element na pocetak
-        //ako nije, samo pomeramo glavu i brisemo rep
-
         let eaten = false;
         let collided = false;
 
         if(this.checkCollision(canvas)){
-            //revise
             collided = true;
             return {eaten, collided};
         }
-
-        console.log(this.body.length);
-        
-        //znaci ako sam imala {x: 1, y: 0}, {x: 0, y: 0} i ako je pojedena hrana, treba da se doda {x: 2, y: 0} i da bude
-        // {x:2, y:0} {x: 1, y: 0} {x: 0, y: 0} znaci ukoliko je pojedena hrana radicu push nova pozicija MOZE UNSHIFT PA REVERSE 
-        //a ako ne onda se shiftuju za jedno mesto
 
         //pomeri se, a nakon pomeranja ukoliko je pojedena hrana zmija raste
         for(let i = this.body.length - 1; i > 0; i--){
@@ -57,17 +46,22 @@ export class Snake {
         }
         
         this.body[0] = this.getNextPosition();
-        
 
+        console.log(this.body)
+        
         //provera da li je pojedena hrana
         if(this.checkFood()){
-            console.log("pojedena hrana");
-            console.log(this.body.length);
-
-            //treba da se namesti da se na kraj dodaje novi element takav da 
-            this.body.push(this.body[this.body.length]);
+            this.body.push({ ...this.body[this.body.length] });
 
             eaten = true;
+
+            //promeniti boju zmije, TODO
+            //naci boju trenutne hrane i postaviti je kao boju zmije
+
+            const foodFromArray = this.food.find(f => f.type === this.currentFood.type);
+            if(foodFromArray){
+                this.color = foodFromArray.color;
+            }
         }
 
         console.log({eaten, collided});
@@ -104,27 +98,24 @@ export class Snake {
     }
 
     checkCollision(canvas: HTMLCanvasElement) : boolean{
-        console.log("check collision");
-        console.log(this.getNextPosition());
-
-        
         const next = this.getNextPosition();
-        
-        //sada bi trebalo da je ok provera sudara sa telom jer proveravam pre nego sto se pomeri
-        
-        console.log(this.dimension, next.x, next.y)
 
-        if(next.x ===  this.dimension ||   //sudar sa zidom 
-            next.y === this.dimension || 
+        if(next.x ==  this.dimension ||   //sudar sa zidom 
+            next.y == this.dimension || 
             next.x < 0  || next.y < 0)
             {
-                console.log("sudar sa zidom");
                 return true;
             }
-        // else if(this.body.some((element) => element.x === next.x && element.y === next.y)) //sudar sa telom, ali morace da se proveri pre nego sto se pozove snake.move()
-        //     return true;
-        else
-            return false;
+
+        for (let i = 1; i < this.body.length; i++) { //sudar sa telom
+            const segment = this.body[i];
+       
+            if (segment && segment.x === next.x && segment.y === next.y) {
+                return true; 
+            }
+        }
+    
+        return false; 
     }
 
     getShape() {
