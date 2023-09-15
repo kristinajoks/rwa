@@ -251,7 +251,7 @@ function createSettings(settingsSection : HTMLDivElement){
         shapeRadio.type = 'radio';
         shapeRadio.name = 'shapes';
         shapeRadio.value = shape.type;
-        shapeRadio.id = shape.id.toString();
+        shapeRadio.id = 'shape'+shape.id.toString();
 
         const shapeLabel = document.createElement('label');
         shapeLabel.classList.add('shapeLabel');
@@ -289,7 +289,7 @@ function createFood(food: {id: number; type: string}[], //async
         foodRadio.type = 'radio';
         foodRadio.name = 'food';
         foodRadio.value = food.type;
-        foodRadio.id = food.id.toString();
+        foodRadio.id = 'food'+food.id.toString();
     
         const foodLabel = document.createElement('label');
         foodLabel.classList.add('foodLabel');
@@ -396,9 +396,6 @@ function drawFood(ctx: CanvasRenderingContext2D, width: number, height: number, 
         x = snake.getCurrentFood().x;
         y = snake.getCurrentFood().y;
         type = snake.getCurrentFood().type;
-
-        console.log("crtam hranu staru");
-        console.log(snake.getCurrentFood());
 
         food.src = "src\\assets\\" + type + ".png";
         food.onload = () => {

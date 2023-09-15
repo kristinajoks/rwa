@@ -22,14 +22,6 @@ export class Snake {
         this.dimension = 10;
         this.currentFood = {x: 0, y: 0, type: 'apple'};
     }
-  
-     //mogu da izmenim snake move da proveri koliziju prvo i da vraca true ili false i onda ovde da izmenim to
-            //a u move kad se proverava kolizija taman da se proveri da li je sudar sa telom pre nego sto se pomeri
-            //i u snake da dodam metodu koja proverava da li je nextPosition pozicija currentFood, pa ako jeste
-            //da se ne brise rep nego da se samo doda novi element na kraj niza i da se nekako oznaci da je pojedeno voce,
-            //npr ili polje u klasi kao eaten pa da se ono prosledi i na osnovu njega u draw fji zove drawFood 
-            //ili da postoji neki observable koji ce da prati da li je se voce jede
-            //ZA SADA NIJE OBS
 
     move(canvas: HTMLCanvasElement) : {eaten: boolean, collided: boolean}{ //vraca da li je pojela hranu ili ne
         let eaten = false;
@@ -46,8 +38,6 @@ export class Snake {
         }
         
         this.body[0] = this.getNextPosition();
-
-        console.log(this.body)
         
         //provera da li je pojedena hrana
         if(this.checkFood()){
@@ -55,16 +45,11 @@ export class Snake {
 
             eaten = true;
 
-            //promeniti boju zmije, TODO
-            //naci boju trenutne hrane i postaviti je kao boju zmije
-
             const foodFromArray = this.food.find(f => f.type === this.currentFood.type);
             if(foodFromArray){
                 this.color = foodFromArray.color;
             }
         }
-
-        console.log({eaten, collided});
 
         return {eaten, collided};
     }

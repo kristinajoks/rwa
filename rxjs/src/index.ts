@@ -306,5 +306,7 @@ function enableControls(){
     });
 
     shapeRadioButtons[0].checked = true;
-    // foodRadioButtons[0].checked = true;
+
+    vegetableDiv.style.display = 'none';
+    fruitDiv.style.display = 'none';
 }
