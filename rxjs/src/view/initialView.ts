@@ -182,7 +182,6 @@ function createSettings(settingsSection : HTMLDivElement){
     dimDiv.id = 'dimDiv';
     settingsSection.appendChild(dimDiv);
 
-
     const shapeDiv = document.createElement('div');
     shapeDiv.classList.add('shapeDiv');
     shapeDiv.id = 'shapeDiv';
@@ -265,7 +264,7 @@ function createSettings(settingsSection : HTMLDivElement){
 
 }
 
-function createFood(food: {id: number; type: string}[], //async
+function createFood(food: {id: number; type: string}[],
     fruit:{id: number; type: string}[],
     vegetable:{id: number; type: string}[],
     containerID : string){

@@ -129,32 +129,25 @@ createGameLayout(document.body).pipe(
 //logika pomeranja zmije
 
 const gameControlFlow = new Subject();
-var currentPoints = new Subject();
-var currentPoints$ = currentPoints.asObservable();
-
-const restartGameSignal = new Subject();
-
-var bestScore = new BehaviorSubject(0);
-var bestScore$ = bestScore.asObservable();
 
 const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
     map((event) => event.key),
     distinctUntilChanged()
-  )
+    )
 
 const interval$ = interval(600);
 const snakeMovement$ = combineLatest([keyDown$, interval$]).pipe(
     map(([key, interval]) => key),
     takeUntil(gameControlFlow)
 )
-
+    
 startButton = document.getElementById('start-button') as HTMLButtonElement;
-
+    
 const start$ = fromEvent(startButton, 'click').pipe(
-    tap( () => {
-        disableControls();
-    }),
-    switchMap(() => snakeMovement$)
+tap( () => {
+    disableControls();
+}),
+switchMap(() => snakeMovement$)
 ).subscribe( 
     (key) => {
         if(key === 'ArrowUp' && snake.getDirection() !== 'down'){
@@ -166,13 +159,14 @@ const start$ = fromEvent(startButton, 'click').pipe(
         else if(key === 'ArrowLeft' && snake.getDirection() !== 'right'){
             snake.changeDirection('left');
         }
-        else if(key === 'ArrowRight' && snake.getDirection() !== 'left'){
-            snake.changeDirection('right');
-        }
-
-        gameLoop();
+    else if(key === 'ArrowRight' && snake.getDirection() !== 'left'){
+        snake.changeDirection('right');
     }
+    
+    gameLoop();
+}
 );
+    
 
 //prikazivanje rezultata
 
@@ -182,8 +176,16 @@ const showResults$ = fromEvent(showResultsButton, 'click').pipe(
         resultsSection = document.getElementById('results-section') as HTMLDivElement;
         resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
     })
-).subscribe();
+    ).subscribe();
+    
+    
+var currentPoints = new Subject();
+var currentPoints$ = currentPoints.asObservable();
 
+const restartGameSignal = new Subject();
+
+var bestScore = new BehaviorSubject(0);
+var bestScore$ = bestScore.asObservable();
 
 let currentScore = 0;
 let currentMaxScore = 0;
