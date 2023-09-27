@@ -5,15 +5,15 @@ import { AuthService } from "./auth.service";
 
 @Injectable() 
 export class LocalStrategy extends PassportStrategy(Strategy){
-    constructor(private authService: AuthService,) {
-        super();
+    constructor(private authService: AuthService) {
+        super(); 
+        //ukoliko odlucim da dodam google/facebook strategiju, 
+        //u super() bih dodala i nju
     }
 
     async validate(username: string, password: string){
-        console.log("Validating");
         const user = await this.authService.validateUser(username, password);
-        console.log("Strategija dobila:");
-        console.log(user);
+
         if (!user){
             throw new UnauthorizedException();
         }

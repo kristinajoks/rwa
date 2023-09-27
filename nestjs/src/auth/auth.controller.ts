@@ -11,7 +11,6 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async logIn(@Request() req) {
-        console.log("Logging in");
         return await this.authService.login(req.user);
     }
 
@@ -21,4 +20,5 @@ export class AuthController {
         return await this.authService.register(newUser);
     }
 
+    // @UseGuards(JwtAuthGuard) cu da koristim negde u nekom kontroleru
 }

@@ -1,0 +1,22 @@
+.login-form{
+    background-color: #fab2ac;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 350px;
+    height: 45%;
+    text-align: center;
+}
+
+.form-control{
+    margin: 10px;
+    width: 250px;
+    height: 30px;
+    border-radius: 10px;
+}
+
+.log-in-btn{
+    width: 50%;
+}
+
