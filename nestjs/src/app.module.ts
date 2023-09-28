@@ -25,7 +25,7 @@ import entities from './typeorm';
       inject: [ConfigService]
     }),
     AuthModule,
-    UserModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

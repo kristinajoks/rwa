@@ -1,11 +1,10 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Closet } from "./closet.entity";
-import { Role } from "src/auth/roles";
+import { Role } from "../auth/roles";
 
 @Entity()
 export class User{
     
-    //dovrsiti
     @PrimaryGeneratedColumn(
         {
             type: "bigint"

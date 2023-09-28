@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDTO } from './user.dto';
 
@@ -19,4 +19,16 @@ export class UserController {
     findUserById(@Query("id") id: number) {
         return this.service.findUserById(id);
     }
+
+    @Get('findbyusername')
+    findUserByUsername(@Query("username") username: string) {
+        return this.service.findUserByUsername(username);
+    }
+
+    @Post('delete')
+    deleteUser(@Body() id: number){
+        return this.service.deleteUser(id);
+    }
+
+    
 }

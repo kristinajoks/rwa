@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDTO } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/typeorm';
-import { Role } from 'src/auth/roles';
+import { Role } from '../auth/roles';
 import { Repository, TypeORMError } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../typeorm';
 
 @Injectable()
 export class UserService {
@@ -47,5 +47,11 @@ export class UserService {
     async findUserByUsername(username: string){
         return await this.userRepository.findOneBy({username: username});
     }
-    
+ 
+    async deleteUser(id: number){
+        return await this.userRepository.delete(id);
+    }
+
+    //TODO updateUser nakon kreiranog UpdateUserDTO
+
 }

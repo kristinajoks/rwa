@@ -1,4 +1,4 @@
-import { ClothesOccasion, ClothesPlacement, ClothesType } from "src/shared/enums";
+import { ClothesOccasion, ClothesPlacement, ClothesType } from "../shared/enums";
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Closet } from "./closet.entity";
 import { Outfit } from "./outfit.entity";

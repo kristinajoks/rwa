@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
+  //ovde treba dodati mock kao u ctrl spec
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
