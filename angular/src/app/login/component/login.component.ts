@@ -1,30 +1,44 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
+import { AuthState } from '../../store/auth/auth.state';
+import { loginUser } from '../../store/auth/auth.actions';
+import { LoginDTO } from '../../data/dtos/login.dto';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+  form: FormGroup = new FormGroup({});
 
-  //experimenting
-  @Input()
-  form = {
-    username: '',
-    password: '',
-    setValue : (value: any) => {
-      this.form.username = value.username;
-      this.form.password = value.password;
-    }
-  };
+  constructor(private formBuilder: FormBuilder,
+    private HTTPClient: HttpClient,
+    private actions$: Actions,
+    private store: Store<AuthState>
+    ) {}
 
-  @Output()
-  submit = new EventEmitter();
+  // userToSend: LoginDTO = {
+  //   username: '',
+  //   password: ''
+  // }
 
-  constructor() { }
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
   onSubmit(): void {
-    this.submit.emit(this.form);
+    if(this.form.valid) {
+      // console.log(this.userToSend);
+      // this.store.dispatch(loginUser( {user: {...this.userToSend}}));
+      this.store.dispatch(loginUser( {user: this.form.getRawValue()} ));
+    }
   }
   //
 

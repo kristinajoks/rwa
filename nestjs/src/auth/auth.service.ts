@@ -15,8 +15,11 @@ export class AuthService {
         private jwtService: JwtService) {
     }
 
-    async register(newUser: CreateUserDTO){
+    async signup(newUser: CreateUserDTO){
         try{
+            console.log('auth service nest ' + newUser.email + 
+            newUser.password + newUser.username); 
+
             const createdUser = await this.userService.createUser(newUser);
             if (createdUser == null || createdUser == undefined || createdUser instanceof TypeORMError) {
                 throw new Error("User could not be created");
@@ -45,7 +48,7 @@ export class AuthService {
     }
 
     async login(user: UserNoPassword){
-        const payload = {user: user, sub: user.id, role: user.role};
+        const payload = {userId: user.id, role: user.role};
         return {
             access_token: this.jwtService.sign(payload),
         };

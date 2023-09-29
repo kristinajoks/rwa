@@ -15,9 +15,9 @@ export class AuthController {
     }
 
     @HttpCode(HttpStatus.CREATED)
-    @Post('register')
-    async register(@Body() newUser: CreateUserDTO) {
-        return await this.authService.register(newUser);
+    @Post('signup')
+    async signup(@Body() newUser: CreateUserDTO) {
+        return await this.authService.signup(newUser);
     }
 
     // @UseGuards(JwtAuthGuard) cu da koristim negde u nekom kontroleru

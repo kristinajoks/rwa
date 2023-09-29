@@ -1,21 +1,26 @@
 <div class="background-container">
 
     <div class="welcome-top-bar">
-        <p class="familiar-p">Are you new here?</p>
-        <a routerLink="/signup">Sign up</a>
+        <div class="welcome-page-nav">
+            <a routerLink="">Home</a>
+        </div>
+        <div class="top-log-nav">
+            <p class="familiar-p">You're new here?</p>
+            <a routerLink="/signup">Sign up</a>
+        </div>
     </div>
 
     <h1 class="above-form-text">Welcome back! </h1>
     
     <div class="login-form">
         
-        <form>
+        <form [formGroup]="form" (submit)="onSubmit()">
 
             <h1> Log in </h1>
             
-            <input type="email" class="form-control" id="floatingInput" placeholder="Email">
+            <input formControlName="username" type="username" class="form-control" id="floatingInput" placeholder="Username">
             
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input formControlName="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
             
             <div class="form-check">
                 

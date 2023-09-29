@@ -59,6 +59,12 @@ body { margin: 0; font-family: Baloo, SyneRegular, IBMPlex; }
     font-family: Baloo;
 }
 
+.btn:hover{
+    background-color: white;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
 .background-container{
     background-image: url('./assets/images/background-gradient.png');
     background-size: cover;
@@ -82,15 +88,28 @@ body { margin: 0; font-family: Baloo, SyneRegular, IBMPlex; }
 .welcome-top-bar{
     display: flex;
     flex-direction: row;
-    justify-content: end;
-    align-items: center;
-    margin-right: 50px;
     width: 100%;
-    position: fixed;
+    align-items: center;
+    justify-content: space-between;
     top: 0;
-    right:0;
+    position: fixed;
     font-size: larger;
     font-family: SyneRegular;
+}
+
+.welcome-page-nav{
+    margin-left: 50px;
+}
+
+.welcome-page{
+    justify-content: end;
+}
+
+.top-log-nav{
+    display: flex;
+    align-items: center;
+    margin-right:50px;
+    align-self: flex-end;
 }
 
 .familiar-p{

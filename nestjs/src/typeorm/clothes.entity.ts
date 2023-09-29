@@ -1,5 +1,5 @@
 import { ClothesOccasion, ClothesPlacement, ClothesType } from "../shared/enums";
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Closet } from "./closet.entity";
 import { Outfit } from "./outfit.entity";
 
@@ -28,9 +28,6 @@ export class Clothes{
 
     @Column()
     src: string;
-
-    @Column()
-    closetId: bigint;
     
     @Column()
     isForSale: boolean;

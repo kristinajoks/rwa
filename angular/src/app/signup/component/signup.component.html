@@ -1,32 +1,39 @@
 <div class="background-container">
 
     <div class="welcome-top-bar">
-        <p class="familiar-p">Already have an account?</p>
-        <a routerLink="/login">Log in</a>
+        <div class="welcome-page-nav">
+            <a routerLink="">Home</a>
+        </div>
+        <div class="top-log-nav">
+            <p class="familiar-p">Already have an account?</p>
+            <a routerLink="/login">Log in</a>
+        </div>
     </div>
 
     <div class="signup-form">
-        
-        <h1>Sign up</h1>
-        
-        <input type="text" class="form-control" id="form-name" placeholder="First name">
-        
-        <input type="text" class="form-control" id="form-last-name" placeholder="Last name">
-        
-        <input type="text" class="form-control" id="form-username" placeholder="Username">
-        
-        <input type="email" class="form-control" id="form-email" placeholder="Email">
-        
-        <input type="password" class="form-control" id="form-password" placeholder="Password">
-        
-        <input type="password" class="form-control" id="form-confirm-password" placeholder="Confirm password">
-        
-        <div>
-            <input type="checkbox" class="form-check-input" id="form-seller">
-            <label class="form-check-label" for="form-seller">I want to be a seller</label>
-        </div>
+        <form [formGroup]="form" (submit)="onSubmit()">
 
-        <button class="sign-up-btn btn" type="submit">Submit</button>
-        
+            <h1>Sign up</h1>
+            
+            <input formControlName="name" type="text" class="form-control" id="form-name" placeholder="First name">
+            
+            <input formControlName="surname" type="text" class="form-control" id="form-last-name" placeholder="Last name">
+            
+            <input formControlName="username" type="text" class="form-control" id="form-username" placeholder="Username">
+            
+            <input formControlName="email" type="email" class="form-control" id="form-email" placeholder="Email">
+            
+            <input formControlName="password" type="password" class="form-control" id="form-password" placeholder="Password">
+            
+            <input formControlName="confirmPassword" type="password" class="form-control" id="form-confirm-password" placeholder="Confirm password">
+            
+            <div>
+                <input type="checkbox" class="form-check-input" id="form-seller">
+                <label class="form-check-label" for="form-seller">I want to be a seller</label>
+            </div>
+            
+            <button class="sign-up-btn btn" type="submit">Submit</button>
+        </form>
+            
     </div>
 </div>
