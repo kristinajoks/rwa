@@ -41,6 +41,7 @@ export class AuthService {
         
         if (user && await argon.verify(user.password, password)) {
             const {password, ...result} = user;
+            console.log(result);
             return result;
         }
         console.log("validation failed");
@@ -49,8 +50,9 @@ export class AuthService {
 
     async login(user: UserNoPassword){
         const payload = {userId: user.id, role: user.role};
+
         return {
-            access_token: this.jwtService.sign(payload),
+            access_token: this.jwtService.sign(payload, {secret: process.env.JWT_SECRET}),
         };
     }
 

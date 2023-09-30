@@ -1,0 +1,36 @@
+<mat-sidenav-container class="home-sidenav-container">
+
+    <mat-sidenav #sidenav1 mode="side" class="side-nav home-left-side" opened>
+        <div class="left-side-div">
+            <p>
+                Profile link,
+                <br> Shop link, 
+                <br> logout dole desno
+            </p>
+
+            <a class="logout-side" routerLink="" (click)="logout()">Logout</a>
+        </div>
+    </mat-sidenav>
+  
+    <mat-sidenav-content class="home-main-content-cont">
+  
+        <div class="home-main-content">
+       
+            <div class="closet">
+                <div class="closet-door left" [class.open]="isDoorOpen">
+                    <div class="closet-knob left" (click)="openDoor()"></div>
+                </div>
+                <div class="closet-door right" [class.open]="isDoorOpen">
+                    <div class="closet-knob right" (click)="openDoor()"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </mat-sidenav-content>
+  
+    <mat-sidenav #sidenav2 mode="side" opened class="side-nav home-right-side" position="end">
+        <p>Side Nav 2</p>
+    </mat-sidenav>
+
+</mat-sidenav-container>

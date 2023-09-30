@@ -14,7 +14,7 @@ export class LoginService {
     return this.httpClient.post<Jwt>('http://localhost:3000/auth/login', user);
   }
 
-  logout() { //diskutabilno, revise
+  logout() { 
     localStorage.removeItem('token');
   }
 

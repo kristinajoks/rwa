@@ -4,37 +4,37 @@ import { loginUserFailure, loginUserSuccess, logoutUserFailure, logoutUserSucces
 
 export const authReducer = createReducer(
     initialState,
-    on(loginUserSuccess, (state, { user, token }) => ({
+    on(loginUserSuccess, (state, { userId, token }) => ({
         ...state,
-        user,
+        userId,
         token,
         isAuthenticated: true,
         error: null,
       })),
       on(loginUserFailure, (state, { error }) => ({
         ...state,
-        user: null,
+        userId: null,
         token: null,
         isAuthenticated: false,
         error,
       })),
-      on(signupUserSuccess, (state, { user, token }) => ({
+      on(signupUserSuccess, (state, { userId, token }) => ({
         ...state,
-        user,
+        userId,
         token,
         isAuthenticated: true,
         error: null,
       })),
       on(signupUserFailure, (state, { error }) => ({
         ...state,
-        user: null,
+        userId: null,
         token: null,
         isAuthenticated: false,
         error,
       })),
       on(logoutUserSuccess, (state) => ({
         ...state,
-        user: null,
+        userId: null,
         token: null,
         isAuthenticated: false,
         error: null,

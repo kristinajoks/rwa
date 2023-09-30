@@ -1,0 +1,124 @@
+.home-sidenav-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.side-nav{
+    width: 20%;
+    padding: 16px;
+    box-sizing: border-box;
+    background-color: #fae3d9;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: large;
+    font-family: SyneRegular;
+}
+
+/* .home-right-side{
+    background-color: #bbded6;
+} */
+
+.home-main-content-cont{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-image: url('../../../assets/images/background-gradient.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.home-main-content{
+    width: 70%;
+    height: 80%;
+}
+
+.closet {
+    width: 100%;
+    height: 100%;
+    background-color: #bbded6; 
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid black;    
+}
+
+.closet-door {
+    width: 50%;
+    height: 100%;
+    background-color: #61c0bf;
+    transition: transform 0.5s;
+}
+
+.closet-door.left {
+    transform-origin: left center;
+    transform: scaleX(1);
+    border-right: 1px solid black;
+    display: flex;
+    justify-content: end;
+}
+
+.closet-door.right {
+    transform-origin: right center;
+    transform: scaleX(1);
+    border-left: 1px solid black;
+}
+
+.closet-knob {
+    width: 30px;
+    height: 30px;
+    background-color: #684921;
+    border: 1 px solid black;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.closet-knob:hover {
+    transform: rotate(180deg);
+}
+
+.closet-knob.left {
+    transform-origin: left center;
+    transform: scaleX(1) rotateY(0deg);
+    transition: transform 0.5s;
+}
+
+.closet-knob.right {
+    transform-origin: right center;
+    transform: scaleX(1) rotateY(0deg);
+    transition: transform 0.5s;
+}
+
+.closet-door.left.open {
+    transform: scaleX(0) rotateY(-90deg); /* Rotate the left door 90 degrees on open */
+}
+
+.closet-door.right.open {
+    transform: scaleX(0) rotateY(90deg); /* Rotate the right door 90 degrees on open */
+}
+
+.left-side-div{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logout-side{
+    align-self: flex-end;
+}

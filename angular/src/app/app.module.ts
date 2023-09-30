@@ -17,6 +17,8 @@ import { appReducer } from './store/state/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { authReducer } from './store/auth/auth.reducer';
+import { HomeComponent } from './home/component/home.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 const appRoutes: Routes = [
   { 
@@ -30,6 +32,10 @@ const appRoutes: Routes = [
   { 
     path: 'signup', 
     component: SignupComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent
   }
 ];
 
@@ -38,7 +44,8 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     SignupComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    HomeComponent
   ],
 
     imports: [
@@ -49,6 +56,7 @@ const appRoutes: Routes = [
       AppRoutingModule,
       FormsModule,
       ReactiveFormsModule,
+      MatSidenavModule,
       HttpClientModule,
       StoreModule.forRoot({app: appReducer, auth: authReducer}, {}),
       EffectsModule.forRoot([AuthEffects]),

@@ -21,25 +21,19 @@ export class LoginComponent implements OnInit{
     private store: Store<AuthState>
     ) {}
 
-  // userToSend: LoginDTO = {
-  //   username: '',
-  //   password: ''
-  // }
-
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    
   }
 
   onSubmit(): void {
     if(this.form.valid) {
-      // console.log(this.userToSend);
-      // this.store.dispatch(loginUser( {user: {...this.userToSend}}));
       this.store.dispatch(loginUser( {user: this.form.getRawValue()} ));
     }
   }
-  //
 
 }
