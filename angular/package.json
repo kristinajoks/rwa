@@ -33,6 +33,7 @@
     "@angular-devkit/build-angular": "^16.2.1",
     "@angular/cli": "~16.2.1",
     "@angular/compiler-cli": "^16.2.0",
+    "@ngrx/schematics": "^16.2.0",
     "@types/body-parser": "^1.19.3",
     "@types/jasmine": "~4.3.0",
     "autoprefixer": "^10.4.15",

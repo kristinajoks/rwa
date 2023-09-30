@@ -14,7 +14,7 @@ export class HomeComponent {
 
   constructor(private store: Store<AuthState>) { }
 
-  openDoor() {
+  moveClosetDoor() {
     this.isDoorOpen = !this.isDoorOpen;
   }
 

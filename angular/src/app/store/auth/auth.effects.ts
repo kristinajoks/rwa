@@ -20,17 +20,11 @@ export class AuthEffects {
     loginUser$ = createEffect(() => this.actions$.pipe(
         ofType(loginUser),
         switchMap((action) => this.loginService.login(action.user).pipe(
-            tap( (jwt) => {
-                console.log(jwt);
-            }
-            ),
             map((jwt) => {
                 const userId = this.jwtHelper.decodeToken(jwt.access_token).userId;
-                console.log('loginUser$' + userId);
                 return loginUserSuccess({userId: userId, token: jwt.access_token});
             }),
             catchError((error) => {
-                console.log(error);
                 return of(loginUserFailure({error}));
             })
         ))
@@ -58,6 +52,7 @@ export class AuthEffects {
         ofType(loginUserSuccess),
         tap(() => this.router.navigate(['/home']))
     ), {dispatch: false});
+    //ovde dodati loadUser da se dispatch 
 
     signupSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(signupUserSuccess),

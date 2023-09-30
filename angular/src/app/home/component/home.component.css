@@ -19,15 +19,20 @@
     font-family: SyneRegular;
 }
 
-/* .home-right-side{
-    background-color: #bbded6;
-} */
+.h1-div-closet{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.h1-closet{
+    font-family: IBMPlex;
+}
 
 .home-main-content-cont{
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
     height: 100%;
     background-image: url('../../../assets/images/background-gradient.png');
     background-size: cover;
@@ -121,4 +126,18 @@
 
 .logout-side{
     align-self: flex-end;
+}
+
+.below-closet-text{
+    display: flex;
+    justify-content: end;
+}
+
+.closet-closing-text{
+    margin: 0px;
+    cursor: pointer;
+}
+.closet-closing-text.none{
+    visibility: hidden;
+    cursor: none;
 }

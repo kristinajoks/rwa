@@ -15,22 +15,35 @@
     <mat-sidenav-content class="home-main-content-cont">
   
         <div class="home-main-content">
-       
+            <div class="h1-div-closet">
+                <h1 class="h1-closet">Your virtual closet</h1>
+            </div>
+            
             <div class="closet">
                 <div class="closet-door left" [class.open]="isDoorOpen">
-                    <div class="closet-knob left" (click)="openDoor()"></div>
+                    <div class="closet-knob left" (click)="moveClosetDoor()"></div>
                 </div>
                 <div class="closet-door right" [class.open]="isDoorOpen">
-                    <div class="closet-knob right" (click)="openDoor()"></div>
+                    <div class="closet-knob right" (click)="moveClosetDoor()"></div>
                 </div>
-
+                
+            </div>
+            
+            <div class="below-closet-text">
+                <p class="closet-closing-text" [class.none]="!isDoorOpen" (click)="moveClosetDoor()">
+                    Close
+                </p>
             </div>
 
         </div>
     </mat-sidenav-content>
   
     <mat-sidenav #sidenav2 mode="side" opened class="side-nav home-right-side" position="end">
-        <p>Side Nav 2</p>
+        <p>
+            Kombinacije
+            <br>
+            Pakovanje u kofer za prodaju
+        </p>
     </mat-sidenav>
 
 </mat-sidenav-container>
