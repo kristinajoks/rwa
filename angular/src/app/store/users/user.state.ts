@@ -6,7 +6,7 @@ export interface UserState {
     surname: string | null;
     username: string | null;
     email: string | null;
-    closetId: number | null; 
+    closetId: number ; 
     role: Role | null;
     error: any | null;
   }
@@ -17,7 +17,7 @@ export interface UserState {
     surname: null,
     username: null,
     email: null,
-    closetId: null,
+    closetId: -1,
     role: null,
     error: null
   };

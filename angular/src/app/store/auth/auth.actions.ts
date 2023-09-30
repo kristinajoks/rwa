@@ -1,6 +1,5 @@
 import { createAction, props } from "@ngrx/store";
 import { LoginDTO } from "../../data/dtos/login.dto";
-import { User } from "../../data/models/user";
 import { SignupDTO } from "../../data/dtos/signup.dto";
 
 export const loginUser = createAction('[Auth] Login User', props<{user: LoginDTO}>());

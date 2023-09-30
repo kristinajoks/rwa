@@ -1,13 +1,13 @@
 
 export interface AuthState {
-    userId: number | null;
+    userId: number;
     token: string | null;
     isAuthenticated: boolean;
     error: any | null;
 }
 
 export const initialState: AuthState = {
-    userId: null,
+    userId: -1,
     token: null,
     isAuthenticated: false,
     error: null

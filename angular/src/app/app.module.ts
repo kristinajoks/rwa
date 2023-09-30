@@ -13,12 +13,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { appReducer } from './store/state/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
-import { authReducer } from './store/auth/auth.reducer';
 import { HomeComponent } from './home/component/home.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { UserEffects } from './store/users/user.effects';
+import { AppState } from './store/state/app.state';
 
 const appRoutes: Routes = [
   { 
@@ -58,8 +58,8 @@ const appRoutes: Routes = [
       ReactiveFormsModule,
       MatSidenavModule,
       HttpClientModule,
-      StoreModule.forRoot({app: appReducer, auth: authReducer}, {}),
-      EffectsModule.forRoot([AuthEffects]),
+      StoreModule.forRoot(AppState, {}),
+      EffectsModule.forRoot([AuthEffects, UserEffects]),
       StoreDevtoolsModule.instrument({
         maxAge: 25, 
         logOnly: !isDevMode(), 

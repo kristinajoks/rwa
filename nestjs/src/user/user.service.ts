@@ -3,20 +3,30 @@ import { CreateUserDTO } from './user.dto';
 import { Role } from '../auth/roles';
 import { Repository, TypeORMError } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../typeorm';
+import { Closet, User } from '../typeorm';
 import * as argon from 'argon2';
 import { type } from 'os';
+import { ClosetService } from '../closet/closet.service';
+import { CreateClosetDTO } from '../closet/closet.dto';
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private closetService: ClosetService
     ) {}
 
     async createUser(userToBeCreated : CreateUserDTO){
         try{
-            console.log('user service nest ' + userToBeCreated.email +
-             userToBeCreated.password + userToBeCreated.username);
+            // CHANGE THIS
+            // const closetToBeCreated: CreateClosetDTO = {
+            //     ownerId: 0,
+            // }
+            // const newCloset = await this.closetService.createCloset(closetToBeCreated);
+
+            // if(!newCloset){
+            //     return null;
+            // }
 
             const hashPassword = await argon.hash(userToBeCreated.password, {type: argon.argon2id});
             const newUser : User = {
@@ -30,14 +40,26 @@ export class UserService {
                 role: Role.User,
             }
 
-            console.log('user service nest' + newUser);
+            //
+            // newCloset.owner = newUser;
+
+            const createdUser = await this.userRepository.save(newUser);
+            const closetToBeCreated: CreateClosetDTO = {
+                ownerId: createdUser.id,
+            }
+
+            const newCloset = await this.closetService.createCloset(closetToBeCreated);
+
+            if(!newCloset){
+                return null;
+            }
+
+            createdUser.closet = newCloset as Closet;
             
-            await this.userRepository.save(newUser);
             delete newUser.password;
             return newUser;
         }
         catch(err){
-            console.log(err);
             return new TypeORMError(err);
         }
     }

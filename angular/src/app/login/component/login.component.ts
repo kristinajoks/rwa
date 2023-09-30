@@ -6,6 +6,8 @@ import { Actions } from '@ngrx/effects';
 import { AuthState } from '../../store/auth/auth.state';
 import { loginUser } from '../../store/auth/auth.actions';
 import { LoginDTO } from '../../data/dtos/login.dto';
+import { selectUserId } from '../../store/auth/auth.selector';
+import { loadUser } from '../../store/users/user.actions';
 
 @Component({
   selector: 'app-login',

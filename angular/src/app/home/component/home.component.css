@@ -110,11 +110,13 @@
 }
 
 .closet-door.left.open {
-    transform: scaleX(0) rotateY(-90deg); /* Rotate the left door 90 degrees on open */
+    transform: scaleX(0) rotateY(-90deg); 
+    cursor: none;
 }
 
 .closet-door.right.open {
-    transform: scaleX(0) rotateY(90deg); /* Rotate the right door 90 degrees on open */
+    transform: scaleX(0) rotateY(90deg); 
+    cursor: none;
 }
 
 .left-side-div{
@@ -141,3 +143,43 @@
     visibility: hidden;
     cursor: none;
 }
+
+.profile-side-div{
+    display: flex;
+    flex-direction: column;
+}
+
+.username-side-div{
+    display: flex;
+    justify-content: center;
+    font-size: larger;
+}
+
+.side-username{
+    color: darkcyan;
+}
+
+.name-side-div{
+    display: flex;
+    justify-content: center;
+    font-family: 'IBMPlex';
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 1 px solid black !important;
+
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+}
+
+::ng-deep .mat-list-item {
+    border: 1px solid black;
+  }
+  

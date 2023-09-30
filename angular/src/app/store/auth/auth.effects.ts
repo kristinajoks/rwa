@@ -52,7 +52,7 @@ export class AuthEffects {
         ofType(loginUserSuccess),
         tap(() => this.router.navigate(['/home']))
     ), {dispatch: false});
-    //ovde dodati loadUser da se dispatch 
+    //MOZDA ovde dodati loadUser da se dispatch 
 
     signupSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(signupUserSuccess),

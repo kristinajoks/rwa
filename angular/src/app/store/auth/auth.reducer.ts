@@ -13,7 +13,7 @@ export const authReducer = createReducer(
       })),
       on(loginUserFailure, (state, { error }) => ({
         ...state,
-        userId: null,
+        userId: -1,
         token: null,
         isAuthenticated: false,
         error,
@@ -27,14 +27,14 @@ export const authReducer = createReducer(
       })),
       on(signupUserFailure, (state, { error }) => ({
         ...state,
-        userId: null,
+        userId: -1,
         token: null,
         isAuthenticated: false,
         error,
       })),
       on(logoutUserSuccess, (state) => ({
         ...state,
-        userId: null,
+        userId: -1,
         token: null,
         isAuthenticated: false,
         error: null,

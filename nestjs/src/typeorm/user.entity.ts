@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Closet } from "./closet.entity";
 import { Role } from "../auth/roles";
 
@@ -27,7 +27,11 @@ export class User{
     @Column()
     password: string;
 
-    @OneToOne(() => Closet, closet => closet.owner)
+    @OneToOne(() => Closet, closet => closet.owner,
+    {
+        eager: true
+    })
+    @JoinColumn()
     closet: Closet;
 
     @Column()

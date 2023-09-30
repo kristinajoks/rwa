@@ -12,4 +12,7 @@ export class UserService {
     return this.httpClient.get('http://localhost:3000/user/findbyid?id=' + id);
   }
 
+  addClosetToUser(userId: number){
+    return this.httpClient.post('http://localhost:3000/closet/create', {ownerId: userId});
+  }
 }

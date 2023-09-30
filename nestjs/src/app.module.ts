@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { ClosetModule } from './closet/closet.module';
 import entities from './typeorm';
 
 @Module({
@@ -25,7 +26,8 @@ import entities from './typeorm';
       inject: [ConfigService]
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    ClosetModule
   ],
   controllers: [AppController],
   providers: [AppService],
