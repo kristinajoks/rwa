@@ -29,7 +29,8 @@ export class User{
 
     @OneToOne(() => Closet, closet => closet.owner,
     {
-        eager: true
+        eager: true,
+        cascade: true
     })
     @JoinColumn()
     closet: Closet;

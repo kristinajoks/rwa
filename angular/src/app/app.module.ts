@@ -19,6 +19,9 @@ import { HomeComponent } from './home/component/home.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { UserEffects } from './store/users/user.effects';
 import { AppState } from './store/state/app.state';
+import { ShopComponent } from './shop/shop.component';
+import { AddClothesModalComponent } from './add-clothes-modal/add-clothes-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const appRoutes: Routes = [
   { 
@@ -36,6 +39,10 @@ const appRoutes: Routes = [
   {
     path: 'home',
     component: HomeComponent
+  },
+  {
+    path: 'shop',
+    component: ShopComponent
   }
 ];
 
@@ -45,7 +52,8 @@ const appRoutes: Routes = [
     LoginComponent,
     SignupComponent,
     WelcomeComponent,
-    HomeComponent
+    HomeComponent,
+    AddClothesModalComponent
   ],
 
     imports: [
@@ -57,6 +65,7 @@ const appRoutes: Routes = [
       FormsModule,
       ReactiveFormsModule,
       MatSidenavModule,
+      MatDialogModule,
       HttpClientModule,
       StoreModule.forRoot(AppState, {}),
       EffectsModule.forRoot([AuthEffects, UserEffects]),

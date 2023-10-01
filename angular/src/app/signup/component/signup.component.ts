@@ -15,8 +15,7 @@ import { Store } from '@ngrx/store';
 })
 export class SignupComponent implements OnInit{
   form: FormGroup = new FormGroup({});
-  
-  //ako ovde radi sve kako treba onda treba odavde da se iskopira za login
+   
   constructor(private formBuilder: FormBuilder,
     private HTTPClient: HttpClient,
     private actions$: Actions,
@@ -37,15 +36,7 @@ export class SignupComponent implements OnInit{
     }); 
    }
 
-   //proveri da li se koristi negde
-  //  userToSend: SignupDTO = {
-  //     name: this.form.get('name')?.value,
-  //     surname: this.form.get('surname')?.value,
-  //     username: this.form.get('username')?.value,
-  //     email: this.form.get('email')?.value,
-  //     password: this.form.get('password')?.value
-  //   };
-
+  
    onSubmit(): void {
      if(this.form.valid) {
       this.store.dispatch(signupUser( {user: this.form.getRawValue()} ));

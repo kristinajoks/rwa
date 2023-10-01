@@ -15,12 +15,7 @@ export class ClosetService {
         try{
             console.log(closetToBeCreated);
 
-            const newCloset: Closet = {
-                id: 0,
-                owner: null,
-                clothes: [],
-                outfits: []
-            }
+            const newCloset = new Closet();
 
             const ownerId = closetToBeCreated.ownerId;
             newCloset.owner = await this.userRepository.findOneBy({id: ownerId});

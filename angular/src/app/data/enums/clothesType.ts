@@ -2,10 +2,10 @@ export enum ClothesType{
     TSHIRT = "tshirt",
     TOP = "top",
     VEST = "vest",
-    PANTS = "pants",
     DRESS = "dress",
+    PANTS = "pants",
     SKIRT = "skirt",
-    SHOES = "shoes",
     JEWERLY = "jewerly",
+    SHOES = "shoes",
     OTHER = "other"
 }

@@ -8,6 +8,7 @@ import * as argon from 'argon2';
 import { type } from 'os';
 import { ClosetService } from '../closet/closet.service';
 import { CreateClosetDTO } from '../closet/closet.dto';
+import { checkPrime } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -18,15 +19,8 @@ export class UserService {
 
     async createUser(userToBeCreated : CreateUserDTO){
         try{
-            // CHANGE THIS
-            // const closetToBeCreated: CreateClosetDTO = {
-            //     ownerId: 0,
-            // }
-            // const newCloset = await this.closetService.createCloset(closetToBeCreated);
-
-            // if(!newCloset){
-            //     return null;
-            // }
+            console.log("usao u createuser f");
+            // const newCloset = new Closet();
 
             const hashPassword = await argon.hash(userToBeCreated.password, {type: argon.argon2id});
             const newUser : User = {
@@ -36,26 +30,12 @@ export class UserService {
                 username: userToBeCreated.username,
                 email: userToBeCreated.email,
                 password: hashPassword,
-                closet: null,
+                closet: new Closet(),
                 role: Role.User,
             }
 
-            //
-            // newCloset.owner = newUser;
-
-            const createdUser = await this.userRepository.save(newUser);
-            const closetToBeCreated: CreateClosetDTO = {
-                ownerId: createdUser.id,
-            }
-
-            const newCloset = await this.closetService.createCloset(closetToBeCreated);
-
-            if(!newCloset){
-                return null;
-            }
-
-            createdUser.closet = newCloset as Closet;
-            
+            const createdUser = await this.userRepository.save(newUser); //obavezno
+ 
             delete newUser.password;
             return newUser;
         }

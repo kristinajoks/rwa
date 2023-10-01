@@ -7,10 +7,10 @@
                 <div class="username-side-div menu-item">
                     <p class="side-username">{{user.username}}</p> 
                     <!-- routerLink="/profile" -->
-                </div>
-                <div class="name-side-div menu-item">
                     <p class="side-name">{{user.name}} {{user.surname}}</p>
                 </div>
+
+                
             </div>
             <p>
                 Profile link,
@@ -28,6 +28,12 @@
                 <h1 class="h1-closet">{{user.name}}'s virtual closet</h1>
             </div>
             
+            <div class="below-closet-text">
+                <p class="closet-closing-text" [class.none]="!isDoorOpen" (click)="moveClosetDoor()">
+                    Close
+                </p>
+            </div>
+
             <div class="closet">
                 <div class="closet-door left" [class.open]="isDoorOpen">
                     <div class="closet-knob left" (click)="moveClosetDoor()"></div>
@@ -36,12 +42,17 @@
                     <div class="closet-knob right" (click)="moveClosetDoor()"></div>
                 </div>
                 
-            </div>
-            
-            <div class="below-closet-text">
-                <p class="closet-closing-text" [class.none]="!isDoorOpen" (click)="moveClosetDoor()">
-                    Close
-                </p>
+
+                <div class="clothes-in-closet" [class.open]="isDoorOpen">
+                    <div *ngFor="let type of clothesTypes" class="clothes-type {{type}}" [style.height]="clothesTypesHeightPercentage">
+                        <h2>{{ type }}</h2>
+                        
+                        <button button class="add-clothes-button" (click)="openAddClothesDialog(type)">
+                        +
+                        </button>
+                            
+                      </div>
+                </div>
             </div>
 
         </div>
