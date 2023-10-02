@@ -13,14 +13,11 @@ export class ClosetService {
 
     async createCloset(closetToBeCreated: CreateClosetDTO){
         try{
-            console.log(closetToBeCreated);
-
             const newCloset = new Closet();
 
             const ownerId = closetToBeCreated.ownerId;
             newCloset.owner = await this.userRepository.findOneBy({id: ownerId});
             
-            // return newCloset;
             return await this.closetRepository.save(newCloset);
         }
         catch(err){
@@ -29,7 +26,7 @@ export class ClosetService {
     }
 
     async getClosets(){
-        return await this.closetRepository.find();
+        return await this.closetRepository.find({relations: ['clothes']});
     }
 
     async findClosetById(id: number){
@@ -48,6 +45,15 @@ export class ClosetService {
             closet.owner = await this.userRepository.findOneBy({id: ownerId});
         }
         return await this.closetRepository.save(closet);
+    }
+
+    async getClothesFromCloset(id: number){
+        const closet = await this.closetRepository.createQueryBuilder('closet')
+        .leftJoinAndSelect('closet.clothes', 'clothes')
+        .where('closet.id = :id', {id: id})
+        .getOne();
+
+        return closet.clothes;
     }
     
 }

@@ -16,9 +16,15 @@ export class Closet{
     @OneToOne(() => User, user => user.closet)
     owner: User;
 
-    @OneToMany(() => Clothes, clothes => clothes.closet)
+    @OneToMany(() => Clothes, clothes => clothes.closet,
+    {
+        cascade: true 
+    })
     clothes: Clothes[];
 
-    @OneToMany(() => Outfit, outfit => outfit.closet)
+    @OneToMany(() => Outfit, outfit => outfit.closet,
+    {
+        cascade: true
+    })
     outfits: Outfit[];
 }

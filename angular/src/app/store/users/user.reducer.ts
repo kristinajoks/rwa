@@ -5,7 +5,7 @@ import { initialState } from "./user.state";
 export const userReducer = createReducer(
     initialState,
     on(loadUserSuccess, (state, { user }) => {
-        const { closet, ...userWithoutCloset } = user; //a razmislicu da li da ga ucitavam odavde ili kasnije
+        const { closet, password, ...userWithoutCloset } = user; //a razmislicu da li da ga ucitavam odavde ili kasnije
         return {
             ...state,
             ...userWithoutCloset,

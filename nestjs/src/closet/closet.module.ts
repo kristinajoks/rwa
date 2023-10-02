@@ -8,6 +8,6 @@ import { Closet, User } from '../typeorm';
   providers: [ClosetService],
   exports: [ClosetService],
   controllers: [ClosetController],
-  imports:[TypeOrmModule.forFeature([Closet]), TypeOrmModule.forFeature([User])],
+  imports:[TypeOrmModule.forFeature([Closet, User])],
 })
 export class ClosetModule {}

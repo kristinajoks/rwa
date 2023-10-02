@@ -5,10 +5,15 @@ import { loadUser } from '../../store/users/user.actions';
 import { selectUserId } from '../../store/auth/auth.selector';
 import { Observable, take } from 'rxjs';
 import { User } from '../../data/models/user';
-import { selectEmail, selectUser } from '../../store/users/user.selector';
+import { selectClosetId, selectEmail, selectUser } from '../../store/users/user.selector';
 import { ClothesType } from '../../data/enums/clothesType';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClothesModalComponent } from '../../add-clothes-modal/add-clothes-modal.component';
+import { createClothesDTO } from '../../data/dtos/clothes.dto';
+import { addClothesToCloset, loadClothesFromCloset } from '../../store/closet/closet.actions';
+import { ShowClothesModalComponent } from '../../show-clothes-modal/show-clothes-modal.component';
+import { selectClothes } from '../../store/closet/closet.selector';
+import { Clothes } from '../../data/models/clothes';
 
 @Component({
   selector: 'app-home',
@@ -25,17 +30,31 @@ export class HomeComponent implements OnInit{
   clothesTypesHeight = 100 / this.clothesTypesNum;
   clothesTypesHeightPercentage = this.clothesTypesHeight + "%";
 
+  closetId: number = -1;
+  clothes : Clothes[] = [];
+
   constructor(private store: Store,
     private dialog: MatDialog
     ) { }
   
   ngOnInit(): void {
+  
     this.store.select(selectUserId).pipe(
       take(1)
     ).subscribe((userId) =>{
       this.userId = userId;
       this.store.dispatch(loadUser( {userId: this.userId}));
     })
+
+    this.store.select(selectClosetId).subscribe((closetId) =>{
+      this.closetId = closetId;
+    })  
+
+    this.store.select(selectClothes).subscribe((clothes) =>{
+      console.log(clothes);
+      this.clothes = clothes;
+    })
+    
   }
 
   moveClosetDoor() {
@@ -48,14 +67,43 @@ export class HomeComponent implements OnInit{
 
   openAddClothesDialog(type: string){
     const addDialogRef = this.dialog.open(AddClothesModalComponent, { 
-      width: '250px',
+      width: '300px',
       data: {type: type}
       });
 
-    addDialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+      addDialogRef.afterClosed().subscribe(result => {
+
+      this.createClothesFromForm(result);      
     });
   }
 
-  
+  createClothesFromForm(result: any){
+    if(!result)
+      return;
+    
+    const newClothes : createClothesDTO = {
+      color: result.color,
+      placement: result.placement,
+      type: result.type,
+      occasion: result.occasion,
+      src: result.src,
+      isForSale: result.isForSale,
+      isSold: false,
+      isFavorite: false,
+      closetId: this.closetId
+    }
+
+    this.store.dispatch(addClothesToCloset({clothes: newClothes}));
+  }
+
+  openShowClothesDialog(type: string){
+    const clothesToShow = this.clothes.filter(clothes => clothes.type == type);
+    
+
+    const addDialogRef = this.dialog.open(ShowClothesModalComponent, {
+      width: '300px',
+      data: {clothes: clothesToShow}
+    });
+  }
+
 }

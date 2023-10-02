@@ -19,8 +19,6 @@ export class UserService {
 
     async createUser(userToBeCreated : CreateUserDTO){
         try{
-            console.log("usao u createuser f");
-            // const newCloset = new Closet();
 
             const hashPassword = await argon.hash(userToBeCreated.password, {type: argon.argon2id});
             const newUser : User = {

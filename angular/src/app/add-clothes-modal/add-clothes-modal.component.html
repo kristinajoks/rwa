@@ -1,3 +1,52 @@
-<p>add-clothes-modal works!</p>
+<div class="modal-container">
 
-<p>{{data}}</p>
+    <p>Add new {{data.type}} to your collection!</p>
+    
+    <form class="add-clothes-form" #clothesForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" id="image" name="image" (change)="onImageSelected($event)" required>
+          </div>
+      
+          <!-- Preview of the selected image -->
+          <div class="form-group">
+            <label>Selected Image:</label>
+            <img class="image-preview" [src]="selectedImage" alt="Selected Image" *ngIf="selectedImage">
+          </div>
+
+        <div class="form-group">
+            <label for="color">Color</label>
+            <input type="text" id="color" name="color" [(ngModel)]="formData.color" required>
+        </div>
+
+        <div class="form-group">
+            <label for="placement">Placement</label>
+            <select id="placement" name="placement" [(ngModel)]="formData.placement" required>
+              <option *ngFor="let option of getPlacementOptions()" [value]="option">{{ option }}</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="occasion">Occasion</label>
+          <select id="occasion" name="occasion" [(ngModel)]="formData.occasion" required>
+            <option *ngFor="let option of getOccasionOptions()" [value]="option">{{ option }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group" *ngIf="isSeller">
+            <label for="isForSale">For Sale</label>
+            <input type="checkbox" id="isForSale" name="isForSale" [(ngModel)]="formData.isForSale">
+        </div>
+
+        <div class="modal-buttons">
+            <button class="clothes-modal-button" type="button" (click)="closeModal()">Cancel</button>
+            <button class="clothes-modal-button save" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- color: input text; placement, occasion, type: enum select;
+src: image picker? ; isForSale: checkbox (if role=Seller); 
+isSold, isFavorite false (nema ih u formi); closetId preuzet iz state-->

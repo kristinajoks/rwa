@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StoreModule } from '@ngrx/store';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
@@ -22,6 +22,9 @@ import { AppState } from './store/state/app.state';
 import { ShopComponent } from './shop/shop.component';
 import { AddClothesModalComponent } from './add-clothes-modal/add-clothes-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ClosetEffects } from './store/closet/closet.effects';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ShowClothesModalComponent } from './show-clothes-modal/show-clothes-modal.component';
 
 const appRoutes: Routes = [
   { 
@@ -53,7 +56,8 @@ const appRoutes: Routes = [
     SignupComponent,
     WelcomeComponent,
     HomeComponent,
-    AddClothesModalComponent
+    AddClothesModalComponent,
+    ShowClothesModalComponent
   ],
 
     imports: [
@@ -68,7 +72,7 @@ const appRoutes: Routes = [
       MatDialogModule,
       HttpClientModule,
       StoreModule.forRoot(AppState, {}),
-      EffectsModule.forRoot([AuthEffects, UserEffects]),
+      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects]),
       StoreDevtoolsModule.instrument({
         maxAge: 25, 
         logOnly: !isDevMode(), 
@@ -78,7 +82,13 @@ const appRoutes: Routes = [
         connectOutsideZone: true 
       }),
     ],
-    providers: [],
+    providers: [
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true
+      }
+    ],
     bootstrap: [AppComponent]
   })
   export class AppModule { }

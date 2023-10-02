@@ -44,14 +44,17 @@
                 
 
                 <div class="clothes-in-closet" [class.open]="isDoorOpen">
-                    <div *ngFor="let type of clothesTypes" class="clothes-type {{type}}" [style.height]="clothesTypesHeightPercentage">
-                        <h2>{{ type }}</h2>
+                    <div *ngFor="let type of clothesTypes" class="clothes-type {{type}}" [style.height]="clothesTypesHeightPercentage" >
+                        <div class="clothes-type-div" (click)="openShowClothesDialog(type)">
+
+                            <h2>{{ type }}</h2>
+                        </div>
                         
                         <button button class="add-clothes-button" (click)="openAddClothesDialog(type)">
                         +
                         </button>
-                            
-                      </div>
+                        
+                    </div>
                 </div>
             </div>
 

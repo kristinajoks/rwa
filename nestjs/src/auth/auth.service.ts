@@ -17,34 +17,27 @@ export class AuthService {
 
     async signup(newUser: CreateUserDTO){
         try{
-            console.log('auth service nest ' + newUser.email + 
-            newUser.password + newUser.username); 
-
             const createdUser = await this.userService.createUser(newUser);
+            
             if (createdUser == null || createdUser == undefined || createdUser instanceof TypeORMError) {
                 throw new Error("User could not be created");
             }
             return await this.login(createdUser);
         }
         catch(err){
-            console.log(err);
             return new HttpException(err, 500);
         }
     }
 
     async validateUser(username:string, password: string) {
-        console.log("Auth service validating");
-        const user = await this.userService.findUserByUsername(username);
-        
-        console.log("User found");
-        console.log(user + " " + password);
+
+        const user = await this.userService.findUserByUsername(username);        
         
         if (user && await argon.verify(user.password, password)) {
             const {password, ...result} = user;
-            console.log(result);
             return result;
         }
-        console.log("validation failed");
+        
         return null;
     }
 

@@ -24,3 +24,27 @@ export enum ClothesOccasion{
     SPORT = "sport",
     OTHER = "other"
 }
+
+export function getPlacementFromString(value: string) : ClothesPlacement{
+    if(
+        Object.values(ClothesPlacement).includes(value as ClothesPlacement)){
+        return value as ClothesPlacement;
+        }
+        return ClothesPlacement.OTHER;
+}
+
+export function getTypeFromString(value: string) : ClothesType{
+    if(
+        Object.values(ClothesType).includes(value as ClothesType)){
+        return value as ClothesType;
+        }
+        return ClothesType.OTHER;
+}
+
+export function getOccasionFromString(value: string) : ClothesOccasion{
+    if(
+        Object.values(ClothesOccasion).includes(value as ClothesOccasion)){
+        return value as ClothesOccasion;
+        }
+        return ClothesOccasion.OTHER;
+}

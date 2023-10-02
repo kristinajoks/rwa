@@ -9,6 +9,6 @@ import { ClosetService } from '../closet/closet.service';
   providers: [UserService, ClosetService],
   exports: [UserService],
   controllers: [UserController],
-  imports: [TypeOrmModule.forFeature([User]), TypeOrmModule.forFeature([Closet])],
+  imports: [TypeOrmModule.forFeature([User, Closet])],
 })
 export class UserModule {}

@@ -6,6 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ClosetModule } from './closet/closet.module';
+import { ClothesModule } from './clothes/clothes.module';
+import { OutfitModule } from './outfit/outfit.module';
+import { ImageController } from './image/image.controller';
+import { ImageService } from './image/image.service';
 import entities from './typeorm';
 
 @Module({
@@ -27,9 +31,11 @@ import entities from './typeorm';
     }),
     AuthModule,
     UserModule,
-    ClosetModule
+    ClosetModule,
+    ClothesModule,
+    OutfitModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ImageController],
+  providers: [AppService, ImageService],
 })
 export class AppModule {}
