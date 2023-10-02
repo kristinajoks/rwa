@@ -18,19 +18,26 @@ export class ShowClothesModalComponent implements OnInit {
 
     ngOnInit(): void {
       console.log(this.data);
-      console.log(this.data.src);
+      console.log(this.data.clothes);
 
-      this.imageService.getImage(this.data.src).subscribe((image) => {
-        console.log(image);
+      this.data.clothes.forEach(
+        (element: { src: string; }) => {
+        console.log(element.src);
 
-        //morace ipak neke akcije dase naprave zbog asinhronog ucitavanja slike
+        this.imageService.getImage(element.src).subscribe((image) => {
+          console.log(image);
+  
+          //morace ipak neke akcije dase naprave zbog asinhronog ucitavanja slike
+  
+          const reader = new FileReader();
+          reader.onload = () =>{
+            this.displayImage = reader.result;
+          };
+          reader.readAsDataURL(image);
+        })
 
-        const reader = new FileReader();
-        reader.onload = () =>{
-          this.displayImage = reader.result;
-        };
-        reader.readAsDataURL(image);
-      })
+      });
+
     }
 
     closeModal(): void {

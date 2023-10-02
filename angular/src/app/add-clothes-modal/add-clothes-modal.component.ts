@@ -47,7 +47,7 @@ export class AddClothesModalComponent implements OnInit{
       type: this.data.type,
       // src: this.selectedImage? this.selectedImage : ""
       src:'src/shared/assets/clothes/' + this.data.type 
-      + '/' + this.formData.color + '.jpg'
+      + '/' + this.formData.color + '.png'
     }
     this.dialogRef.close(this.returnData);
   }
