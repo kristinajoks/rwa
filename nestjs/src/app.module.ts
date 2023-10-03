@@ -9,8 +9,10 @@ import { ClosetModule } from './closet/closet.module';
 import { ClothesModule } from './clothes/clothes.module';
 import { OutfitModule } from './outfit/outfit.module';
 import { ImageController } from './image/image.controller';
-import { ImageService } from './image/image.service';
 import entities from './typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { DatabaseFilesModule } from './database-files/database-files.module';
 
 @Module({
   imports: [
@@ -33,9 +35,10 @@ import entities from './typeorm';
     UserModule,
     ClosetModule,
     ClothesModule,
-    OutfitModule
+    OutfitModule,
+    DatabaseFilesModule
   ],
   controllers: [AppController, ImageController],
-  providers: [AppService, ImageService],
+  providers: [AppService],
 })
 export class AppModule {}

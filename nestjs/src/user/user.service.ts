@@ -29,7 +29,7 @@ export class UserService {
                 email: userToBeCreated.email,
                 password: hashPassword,
                 closet: new Closet(),
-                role: Role.User,
+                role: userToBeCreated.role,
             }
 
             const createdUser = await this.userRepository.save(newUser); //obavezno
@@ -60,4 +60,9 @@ export class UserService {
 
     //TODO updateUser nakon kreiranog UpdateUserDTO
 
+    async updateUserRole(id: number, role: Role){
+        const user = await this.findUserById(id);
+        user.role = role;
+        return await this.userRepository.save(user);
+    }
 }

@@ -16,8 +16,6 @@ export const closetReducer = createReducer(
         error,
     })),
     on(loadClosetSuccess, (state, {closet}) => {
-        console.log(state);
-        console.log(closet);
         return {
             ...state,
             id: closet.id,
@@ -38,5 +36,10 @@ export const closetReducer = createReducer(
     on(addClothesFailure, (state, {error}) => ({
         ...state,
         error,
-    }))
+    })),
+    on(addClothesFailure, (state, {error}) => ({
+        ...state,
+        error,
+    })),
 );
+

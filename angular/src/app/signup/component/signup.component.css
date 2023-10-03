@@ -22,3 +22,8 @@
     width: 80%;
     align-self: center;
 }
+
+.min-warning{
+    font-size: medium;
+    margin: 0px;
+}

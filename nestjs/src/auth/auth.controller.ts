@@ -19,6 +19,4 @@ export class AuthController {
     async signup(@Body() newUser: CreateUserDTO) {
         return await this.authService.signup(newUser);
     }
-
-    // @UseGuards(JwtAuthGuard) cu da koristim negde u nekom kontroleru
 }

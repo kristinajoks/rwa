@@ -3,9 +3,9 @@ export interface createClothesDTO {
     placement: string;
     type: string;
     occasion: string;
-    src: string;
     isForSale: boolean;
     isSold: boolean;
     isFavorite: boolean;
     closetId: number;
+    image : File | null;
 }

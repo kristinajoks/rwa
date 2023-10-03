@@ -25,6 +25,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ClosetEffects } from './store/closet/closet.effects';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ShowClothesModalComponent } from './show-clothes-modal/show-clothes-modal.component';
+import { DatabaseFileEffects } from './store/databaseFile/databaseFile.effects';
+import { SellerDialogComponent } from './seller-dialog/seller-dialog.component';
 
 const appRoutes: Routes = [
   { 
@@ -57,7 +59,8 @@ const appRoutes: Routes = [
     WelcomeComponent,
     HomeComponent,
     AddClothesModalComponent,
-    ShowClothesModalComponent
+    ShowClothesModalComponent,
+    SellerDialogComponent
   ],
 
     imports: [
@@ -72,7 +75,7 @@ const appRoutes: Routes = [
       MatDialogModule,
       HttpClientModule,
       StoreModule.forRoot(AppState, {}),
-      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects]),
+      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects, DatabaseFileEffects]),
       StoreDevtoolsModule.instrument({
         maxAge: 25, 
         logOnly: !isDevMode(), 

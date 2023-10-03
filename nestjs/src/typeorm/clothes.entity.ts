@@ -1,7 +1,8 @@
 import { ClothesOccasion, ClothesPlacement, ClothesType } from "../shared/enums";
-import { Column, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Closet } from "./closet.entity";
 import { Outfit } from "./outfit.entity";
+import DatabaseFile from "./databaseFile.entity";
 
 
 @Entity()
@@ -27,9 +28,6 @@ export class Clothes{
     occasion: ClothesOccasion;
 
     @Column()
-    src: string;
-    
-    @Column()
     isForSale: boolean;
 
     @Column()
@@ -37,7 +35,19 @@ export class Clothes{
 
     @Column()
     isFavorite: boolean;
-
+    
+    @JoinColumn({name: 'avatarId'})
+    @OneToOne(
+    () => DatabaseFile,
+    {
+        nullable: true
+    }
+    )
+    avatar?: DatabaseFile;
+        
+    @Column({nullable: true})
+    avatarId?: number;
+        
     @ManyToOne(() => Closet, closet => closet.clothes)
     closet: Closet;
 

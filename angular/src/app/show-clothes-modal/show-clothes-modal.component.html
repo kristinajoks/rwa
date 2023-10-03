@@ -1,3 +1,11 @@
 <p>show-clothes-modal works!</p>
 
-<img [src]="displayImage" alt="clothesImage">
+<!-- ovo odmah ispod je div za svaki komad odece zasebno -->
+<div>
+    <div class="sell-check-div" *ngIf="isSeller">
+        <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" />
+        <label class="check-label" for="show-clothes-modal-div"> Sell </label>
+    </div>
+</div>
+
+<!-- <img [src]="displayImage" alt="clothesImage"> -->

@@ -5,9 +5,9 @@ import path from 'path';
 @Controller('image')
 export class ImageController {
 
-    @Get()
-    async serveImage(@Param('img') img: string, @Res() res: Response) {
-        const imageFilePath = path.join(__dirname, '..', '..', img); //mozda ce trebati da se promeni
-        return res.sendFile(imageFilePath);
-    }
+    // @Get(':src')
+    // async serveImage(@Param('src') src: string, @Res() res: Response) {
+    //     const imageFilePath = path.join(__dirname, '..', 'src', 'shared', 'assets', 'clothes/', src); //mozda ce trebati da se promeni
+    //     return res.sendFile(imageFilePath);
+    // }
 }

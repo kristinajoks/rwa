@@ -9,9 +9,13 @@
                     <!-- routerLink="/profile" -->
                     <p class="side-name">{{user.name}} {{user.surname}}</p>
                 </div>
-
-                
             </div>
+
+            <div class="become-seller menu-item" *ngIf="isUser" >
+                <p class="become-seller-text" (click)="openSellerDialog()">Become a seller</p>
+            </div>
+
+            //nekako da se nameste da su zakacene za vrh
             <p>
                 Profile link,
                 <br> Shop link

@@ -1,4 +1,5 @@
-import { IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
+import { ClothesOccasion, ClothesPlacement, ClothesType } from "../shared/enums";
 
 export class createClothesDTO {
     
@@ -6,16 +7,16 @@ export class createClothesDTO {
     color: string;
 
     @IsNotEmpty()
-    placement: string;
+    @IsEnum(ClothesPlacement)
+    placement: ClothesPlacement;
 
     @IsNotEmpty()
-    type: string;
+    @IsEnum(ClothesType)
+    type: ClothesType;
 
     @IsNotEmpty()
-    occasion: string;
-
-    @IsNotEmpty()
-    src: string;
+    @IsEnum(ClothesOccasion)
+    occasion: ClothesOccasion;
 
     @IsNotEmpty()
     isForSale: boolean;

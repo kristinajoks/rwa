@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Role } from '../../data/enums/role';
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +15,9 @@ export class UserService {
 
   addClosetToUser(userId: number){
     return this.httpClient.post('http://localhost:3000/closet/create', {ownerId: userId});
+  }
+
+  changeUserRole(userId: number, role: Role){
+    return this.httpClient.put('http://localhost:3000/user/' + userId + '/updateRole', {role});
   }
 }

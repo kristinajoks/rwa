@@ -24,11 +24,12 @@
             <input formControlName="email" type="email" class="form-control" id="form-email" placeholder="Email">
             
             <input formControlName="password" type="password" class="form-control" id="form-password" placeholder="Password">
+            <p class="min-warning">Minimum password length: 6 characters.</p>
             
             <input formControlName="confirmPassword" type="password" class="form-control" id="form-confirm-password" placeholder="Confirm password">
             
             <div>
-                <input type="checkbox" class="form-check-input" id="form-seller">
+                <input type="checkbox" class="form-check-input" id="form-seller" (change)="onSellerCheckboxChange($event)">
                 <label class="form-check-label" for="form-seller">I want to be a seller</label>
             </div>
             

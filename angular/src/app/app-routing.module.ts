@@ -6,6 +6,7 @@ import { SignupComponent } from './signup/component/signup.component';
 import { HomeComponent } from './home/component/home.component';
 import { authGuard, unAuthGuard } from './guards/auth.guard';
 import { ShopComponent } from './shop/shop.component';
+import { RouteGuardService } from './route-guard.service';
 
 const routes: Routes = [
   {path: '', 
@@ -21,7 +22,12 @@ const routes: Routes = [
   canActivate: [authGuard]},
   {path: 'shop',
   component: ShopComponent,
-  canActivate: [authGuard]}
+  canActivate: [authGuard]},
+  {
+    path: '**',
+    redirectTo: '',
+    canActivate: [RouteGuardService],
+  },
 ];
 
 @NgModule({

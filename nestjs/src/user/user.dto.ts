@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsEmail } from 'class-validator';
+import { Role } from '../auth/roles';
 
 export class CreateUserDTO {
     @IsNotEmpty()
@@ -16,6 +17,9 @@ export class CreateUserDTO {
 
     @IsNotEmpty()
     password: string;
+
+    @IsNotEmpty()
+    role: Role;
 
     //TODO dodati izbor uloge
 }

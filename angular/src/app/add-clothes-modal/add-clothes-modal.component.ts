@@ -5,6 +5,7 @@ import { ClothesType } from '../data/enums/clothesType';
 import { ClothesPlacement } from '../data/enums/clothesPlacement';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../store/users/user.selector';
+import { createClothesDTO } from '../data/dtos/clothes.dto';
 
 @Component({
   selector: 'app-add-clothes-modal',
@@ -12,16 +13,20 @@ import { selectUser } from '../store/users/user.selector';
   styleUrls: ['./add-clothes-modal.component.css']
 })
 export class AddClothesModalComponent implements OnInit{
-  formData: any = {
+  formData: createClothesDTO = {
     color: "",
     placement: "",
     type: "",
     occasion: "",
-    src: "",
     isForSale: false,
+    isSold: false,
+    isFavorite: false,
+    closetId: -1,
+    image: null
   };
   returnData: any = {};
-  selectedImage: any;
+  selectedImage: File | null = null;
+  selectedImageSrc: string = "";
 
   user$ = this.store.select(selectUser);
   isSeller = false;
@@ -45,22 +50,27 @@ export class AddClothesModalComponent implements OnInit{
     this.returnData = {
       ...this.formData,
       type: this.data.type,
-      // src: this.selectedImage? this.selectedImage : ""
-      src:'src/shared/assets/clothes/' + this.data.type 
-      + '/' + this.formData.color + '.png'
+      image: this.selectedImage
     }
+
+    console.log('ret data' + this.returnData.image);
+
     this.dialogRef.close(this.returnData);
   }
 
   onImageSelected(event: any){
+    console.log(event.target.files[0]);
+
     const image = event.target.files[0];
     if(image){
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.selectedImage = e.target.result;
+        this.selectedImageSrc = e.target.result;
       }
       reader.readAsDataURL(image);
     }
+
+    this.selectedImage = event.target.files[0];
   }
 
 
