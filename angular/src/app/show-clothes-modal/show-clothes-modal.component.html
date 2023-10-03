@@ -1,5 +1,17 @@
 <p>show-clothes-modal works!</p>
 
+
+ <div *ngIf="(loadedDatabaseFiles$ | async) as files; else loadingContent">
+
+     <div *ngFor="let dbFile of files">
+         <img [src]="displayImage(dbFile.data)" alt="dbFile.filename"> 
+        </div>
+</div>
+
+<ng-template #loadingContent>
+  Loading files...
+</ng-template>
+
 <!-- ovo odmah ispod je div za svaki komad odece zasebno -->
 <div>
     <div class="sell-check-div" *ngIf="isSeller">
@@ -7,5 +19,3 @@
         <label class="check-label" for="show-clothes-modal-div"> Sell </label>
     </div>
 </div>
-
-<!-- <img [src]="displayImage" alt="clothesImage"> -->

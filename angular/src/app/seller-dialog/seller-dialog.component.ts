@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { SellerDialogService } from './seller-dialog.service';
 import { Role } from '../data/enums/role';
+import { changeUserRole } from '../store/users/user.actions';
 
 @Component({
   selector: 'app-seller-dialog',
@@ -25,7 +26,9 @@ export class SellerDialogComponent {
   onSubmit(): void {
     // if (this.becomeSeller) {
 
-      this.sellerDialogService.updateUserRoleFromModal(this.data.userId, Role.Seller);
+      // this.sellerDialogService.updateUserRoleFromModal(this.data.userId, Role.Seller);
+      this.store.dispatch(changeUserRole({userId: this.data.userId, role: Role.Seller}));
+
       this.dialogRef.close();
 
       // Make an API call to update the user's role to 'Seller'

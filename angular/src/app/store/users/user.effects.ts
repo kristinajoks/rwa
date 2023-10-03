@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../../user/service/user.service";
-import { loadUser, loadUserFailure, loadUserSuccess } from "./user.actions";
+import { changeUserRole, changeUserRoleFailure, changeUserRoleSuccess, loadUser, loadUserFailure, loadUserSuccess } from "./user.actions";
 import { switchMap, map, catchError, of, tap } from "rxjs";
 import { User } from "../../data/models/user";
 
@@ -22,5 +22,22 @@ export class UserEffects{
             catchError((error) => of(loadUserFailure({error})))
         ))
     ));
+
+    changeUserRole$ = createEffect(() => this.actions$.pipe(
+        ofType(changeUserRole),
+        switchMap((action) => this.userService.changeUserRole(action.userId, action.role).pipe(
+            map((user) =>  {                
+                return changeUserRoleSuccess({user: user as User});
+            }),
+            catchError((error) => of(changeUserRoleFailure({error})))
+        ))
+    ));
+
+    chaneUserRoleSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(changeUserRoleSuccess),
+        tap((action) => {
+            this.router.navigate(['/shop']); 
+        })
+    ), { dispatch: false });
 
 }

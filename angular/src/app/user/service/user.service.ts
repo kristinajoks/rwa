@@ -18,6 +18,6 @@ export class UserService {
   }
 
   changeUserRole(userId: number, role: Role){
-    return this.httpClient.put('http://localhost:3000/user/' + userId + '/updateRole', {role});
+    return this.httpClient.put('http://localhost:3000/user/' + userId + '/updateRole/' + role , {});
   }
 }

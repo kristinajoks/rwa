@@ -8,7 +8,7 @@ import { Role } from '../data/enums/role';
 @Injectable({
   providedIn: 'root',
 })
-export class SellerDialogService {
+export class SellerDialogService { //mozda nije potreban razmislicu
   constructor(private dialog: MatDialog,
     private userService: UserService) {}
 

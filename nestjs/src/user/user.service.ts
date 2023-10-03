@@ -58,8 +58,6 @@ export class UserService {
         return await this.userRepository.delete(id);
     }
 
-    //TODO updateUser nakon kreiranog UpdateUserDTO
-
     async updateUserRole(id: number, role: Role){
         const user = await this.findUserById(id);
         user.role = role;

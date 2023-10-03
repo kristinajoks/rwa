@@ -56,8 +56,8 @@ export class UserController {
         }
     }
 
-    @Put(':id/updateRole')
-    updateUserRole(@Param('id') id: number, @Body() role: Role){ //pitanje kako ce da se posalje Role kroz body
+    @Put(':id/updateRole/:role')
+    updateUserRole(@Param('id') id: number, @Param('role') role: Role){
         try{
             return this.service.updateUserRole(id, role);
         }

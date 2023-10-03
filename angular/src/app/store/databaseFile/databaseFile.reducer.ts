@@ -4,12 +4,16 @@ import { loadDatabaseFileSuccess, loadDatabaseFileFailure } from "./databaseFile
 
 export const databaseFileReducer = createReducer(
   initialState,
-  on(loadDatabaseFileSuccess, (state, { databaseFile }) => ({
-    ...state,
-    entities: { ...state.entities, [databaseFile.id]: databaseFile },
-    loading: false,
+  on(loadDatabaseFileSuccess, (state, { databaseFile }) => {
+    console.log(databaseFile);
+    console.log(state)
+    console.log(state.loadedDatabaseFiles);
+    return{
+    ...state,  loading: false,
+    loadedDatabaseFiles: [...state.loadedDatabaseFiles, databaseFile],
     error: null,
-  })),
+  };
+}),
   on(loadDatabaseFileFailure, (state, { error }) => ({
     ...state,
     loading: false,
