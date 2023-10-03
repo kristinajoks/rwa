@@ -3,5 +3,6 @@ import { DatabaseFileState } from "./databaseFile.state";
 
 export const selectDatabaseFileState = createFeatureSelector<DatabaseFileState>('databaseFile');
 
+export const selectDatabaseFile = createSelector(selectDatabaseFileState, (state: DatabaseFileState) => state);
 export const selectDatabaseFileLoading = createSelector(selectDatabaseFileState, (state: DatabaseFileState) => state.loading);
 export const selectDatabaseFileLoadedDatabaseFiles = createSelector(selectDatabaseFileState, (state: DatabaseFileState) => state.loadedDatabaseFiles);

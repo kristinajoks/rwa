@@ -31,7 +31,7 @@ export class ClosetEffects {
             catchError((error) => of(addClothesFailure({error})))
         ))
     ));
-   
+
     loadClothesFromCloset$ = createEffect(() => this.actions$.pipe(
         ofType(loadClothesFromCloset),
         switchMap((action) => this.closetService.getClothesFromCloset(action.id).pipe(

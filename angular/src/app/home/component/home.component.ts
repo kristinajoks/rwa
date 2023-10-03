@@ -18,6 +18,7 @@ import { ImageService } from '../../image.service';
 import { Role } from '../../data/enums/role';
 import { SellerDialogService } from '../../seller-dialog/seller-dialog.service';
 import { SellerDialogComponent } from '../../seller-dialog/seller-dialog.component';
+import { cleanDatabaseFiles } from '../../store/databaseFile/databaseFile.actions';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit{
   closetId: number = -1;
   clothes : Clothes[] = [];
 
-  isUser = true;
+  isUser$ = this.store.select(selectRole);
 
   constructor(private store: Store,
     private dialog: MatDialog,
@@ -61,14 +62,8 @@ export class HomeComponent implements OnInit{
     this.store.select(selectClothes).subscribe((clothes) =>{
       this.clothes = clothes;
     })
-
-    this.store.select(selectRole).subscribe((role) =>{
-      if(role == Role.Seller){
-        this.isUser = false;
-      }
-    })
-
   }
+  
 
   moveClosetDoor() {
     this.isDoorOpen = !this.isDoorOpen;
@@ -76,6 +71,7 @@ export class HomeComponent implements OnInit{
 
   logout(){
     this.store.dispatch(logoutUser())
+    this.store.dispatch(cleanDatabaseFiles());
   }  
 
 openAddClothesDialog(type: string){

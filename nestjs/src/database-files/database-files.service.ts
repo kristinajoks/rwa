@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import DatabaseFile from '../typeorm/databaseFile.entity';
+import { Readable } from 'typeorm/platform/PlatformTools';
 
 @Injectable()
 export class DatabaseFilesService {
@@ -24,7 +25,11 @@ export class DatabaseFilesService {
         if(!file){
             throw new NotFoundException();
         }
-        return file;
+
+        const fileData = Readable.from(file.data);
+        const streamableData = new StreamableFile(fileData);
+        // return file;
+        return {id: file.id, filename: file.filename, data: streamableData};
     }
 
     async deleteFileWithQueryBuilder(fileId: number, queryRunner: QueryRunner){

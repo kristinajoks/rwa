@@ -1,21 +1,22 @@
-<p>show-clothes-modal works!</p>
+<div>
+ <div class="clothes-collecion-div" *ngIf="(loadedDatabaseFiles$ | async) as files">
 
+    <div class="clothing-preview" *ngFor="let dbFile of loadedDatabaseFiles$ | async">
+        <img class="clothing-item-image" src="assets/clothes/{{data.type}}/{{dbFile.filename}}" alt="{{dbFile.filename}}" >        
 
- <div *ngIf="(loadedDatabaseFiles$ | async) as files; else loadingContent">
-
-     <div *ngFor="let dbFile of files">
-         <img [src]="displayImage(dbFile.data)" alt="dbFile.filename"> 
+        <div class="sell-check-div" *ngIf="isSeller">
+            <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" />
+            <label class="check-label" for="show-clothes-modal-div"> Sell </label>
         </div>
+    </div>
 </div>
 
-<ng-template #loadingContent>
-  Loading files...
-</ng-template>
+<div class="no-clothes-div" *ngIf="!isThereClothes">
+    <p class="no-clothes-text"> There are no clothes of this type in your closet. </p>
+</div>
 
-<!-- ovo odmah ispod je div za svaki komad odece zasebno -->
-<div>
-    <div class="sell-check-div" *ngIf="isSeller">
-        <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" />
-        <label class="check-label" for="show-clothes-modal-div"> Sell </label>
-    </div>
+<div class="modal-buttons">
+    <button class="clothes-modal-button" type="button" (click)="closeModal()">Ok</button>
+</div>
+
 </div>

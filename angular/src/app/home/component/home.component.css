@@ -167,7 +167,7 @@
     padding: 8px 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border: 1 px solid black !important;
+    margin-bottom: 20px;
 
 
     &:hover {
@@ -230,6 +230,8 @@ p{
     cursor: pointer;
 }
 
-.become-seller-text{
-    font-family: IBMPlex;
+.menu-item-small{
+    justify-content: center;
+    color: darkcyan;
+    font-size: larger;
 }

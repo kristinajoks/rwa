@@ -9,7 +9,6 @@
             <input type="file" id="image" name="image" (change)="onImageSelected($event)" required>
           </div>
       
-          <!-- Preview of the selected image -->
           <div class="form-group">
             <label>Selected Image:</label>
             <img class="image-preview" [src]="selectedImageSrc" alt="Selected Image" *ngIf="selectedImage">
@@ -45,8 +44,3 @@
         </div>
     </form>
 </div>
-
-
-<!-- color: input text; placement, occasion, type: enum select;
-src: image picker? ; isForSale: checkbox (if role=Seller); 
-isSold, isFavorite false (nema ih u formi); closetId preuzet iz state-->

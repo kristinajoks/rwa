@@ -1,8 +1,11 @@
-<!-- seller-dialog.component.html -->
 
-<h1>Become a Seller</h1>
-<p>Would you like to become a seller?</p>
-<div class="button-container">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button (click)="onSubmit()">Confirm</button>
+<div class="become-seller-container">  
+  <h2>Become a Seller</h2>
+
+  <p>Would you like to become a seller?</p>
+
+  <div class="button-container">
+    <button class="seller-modal-button" mat-button (click)="onCancel()">Cancel</button>
+    <button class="seller-modal-button save" mat-button (click)="onSubmit()">Confirm</button>
+  </div>
 </div>
