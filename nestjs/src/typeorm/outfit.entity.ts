@@ -12,7 +12,10 @@ export class Outfit{
     )
     id: number;
 
-    @ManyToMany(() => Clothes, clothes => clothes.outfits)
+    @ManyToMany(() => Clothes, clothes => clothes.outfits, 
+    {
+        cascade: true
+    })
     @JoinTable()
     clothes: Clothes[];
 

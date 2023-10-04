@@ -11,12 +11,22 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async logIn(@Request() req) {
-        return await this.authService.login(req.user);
+        try{
+            return await this.authService.login(req.user);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @HttpCode(HttpStatus.CREATED)
     @Post('signup')
     async signup(@Body() newUser: CreateUserDTO) {
-        return await this.authService.signup(newUser);
+        try{
+            return await this.authService.signup(newUser);
+        }
+        catch(err){
+            return err;
+        }
     }
 }

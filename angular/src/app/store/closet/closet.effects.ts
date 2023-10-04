@@ -1,22 +1,24 @@
 import { Injectable } from "@angular/core";
-import { Actions, act, createEffect, ofType } from "@ngrx/effects";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ClothesService } from "../../clothes/service/clothes.service";
-import { switchMap, map, catchError, of, tap, mergeMap, withLatestFrom } from "rxjs";
-import { addClothesToCloset, addClothesSuccess, addClothesFailure, loadClothesFromCloset, loadClothesFromClosetFailure, loadClothesFromClosetSuccess, loadCloset, loadClosetSuccess, loadClosetFailure} from "./closet.actions";
+import { switchMap, map, catchError, of, tap, mergeMap } from "rxjs";
+import { addClothesToCloset, addClothesSuccess, addClothesFailure, loadClothesFromCloset, loadClothesFromClosetFailure, loadClothesFromClosetSuccess, loadCloset, loadClosetSuccess, loadClosetFailure, updateClothesForSale, updateClothesForSaleSuccess, updateClothesForSaleFailure, addOutfitToCloset, addOutfitSuccess, addOutfitFailure} from "./closet.actions";
 import { Clothes } from "../../data/models/clothes";
 import { loadUserSuccess } from "../users/user.actions";
 import { ClosetService } from "../../closet/service/closet.service";
 import { Closet } from "../../data/models/closet";
-import { ImageService } from "../../image.service";
-import { DatabaseFile } from "../../data/models/databaseFile";
 import { Store } from "@ngrx/store";
 import { selectClosetId } from "./closet.selector";
+import { OutfitService } from "../../outfit/outfit.service";
+import { OutfitDTO } from "../../data/dtos/outfit.dto";
+import { initializeOutfit } from "../outfits/outfits.actions";
 
 @Injectable()
 export class ClosetEffects {
     constructor(private actions$: Actions, 
         private clothesService: ClothesService,
         private closetService: ClosetService,
+        private outfitService: OutfitService,
         private store: Store
         ) 
     { }
@@ -43,7 +45,6 @@ export class ClosetEffects {
             })
         ))
     ));
-
 
     loadClothesFromCloset$ = createEffect(() => this.actions$.pipe(
         ofType(loadClothesFromCloset),
@@ -72,7 +73,38 @@ export class ClosetEffects {
 
     loadClosetSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(loadClosetSuccess),
-        map((action) => loadClothesFromCloset({id: action.closet.id}))
+        mergeMap((action) => [
+            loadClothesFromCloset({id: action.closet.id}),
+            initializeOutfit({closetId: action.closet.id})
+        ])
+    )); 
+
+    updateClothesForSale$ = createEffect(() => this.actions$.pipe(
+        ofType(updateClothesForSale),
+        switchMap((action) => this.clothesService.changeClothesForSale(action.clothes.id).pipe(
+            map((clothes) => {
+                return updateClothesForSaleSuccess({clothes: clothes as Clothes});
+            }),
+            catchError((error) => of(updateClothesForSaleFailure({error})))
+        ))
     ));
 
+    updateClothesForSaleSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(updateClothesForSaleSuccess),
+        switchMap(() => this.store.select(selectClosetId).pipe(
+            map((closetId) => {
+                return loadClothesFromCloset({id: closetId});
+            })
+        ))
+    ));
+
+    addOutfitToCloset$ = createEffect(() => this.actions$.pipe(
+        ofType(addOutfitToCloset),
+        switchMap((action) => this.outfitService.createOutfit(action.outfit).pipe(
+            map((outfit) => {
+                return addOutfitSuccess({outfit: outfit as OutfitDTO});
+            }),
+            catchError((error) => of(addOutfitFailure({error})))
+        ))
+    ));
 }

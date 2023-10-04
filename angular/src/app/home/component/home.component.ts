@@ -9,13 +9,16 @@ import { ClothesType } from '../../data/enums/clothesType';
 import { MatDialog } from '@angular/material/dialog';
 import { AddClothesModalComponent } from '../../add-clothes-modal/add-clothes-modal.component';
 import { createClothesDTO } from '../../data/dtos/clothes.dto';
-import { addClothesToCloset } from '../../store/closet/closet.actions';
+import { addClothesToCloset, addOutfitToCloset } from '../../store/closet/closet.actions';
 import { ShowClothesModalComponent } from '../../show-clothes-modal/show-clothes-modal.component';
 import { selectClothes } from '../../store/closet/closet.selector';
 import { Clothes } from '../../data/models/clothes';
 import { ImageService } from '../../image.service';
 import { SellerDialogComponent } from '../../seller-dialog/seller-dialog.component';
 import { cleanDatabaseFiles } from '../../store/databaseFile/databaseFile.actions';
+import { initializeOutfit, removeClothesFromOutfit } from '../../store/outfits/outfits.actions';
+import { selectOutfitToBeAdded } from '../../store/outfits/outfits.selector';
+import { selectDatabaseFileLoadedDatabaseFiles } from '../../store/databaseFile/databaseFile.selector';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +29,8 @@ export class HomeComponent implements OnInit{
   isDoorOpen = false;
   userId: number = -1;
   user$ = this.store.select(selectUser);
+  outfitToBeAdded$ = this.store.select(selectOutfitToBeAdded);
+
 
   clothesTypes = Object.values(ClothesType);
   clothesTypesNum = this.clothesTypes.length;
@@ -58,6 +63,7 @@ export class HomeComponent implements OnInit{
     this.store.select(selectClothes).subscribe((clothes) =>{
       this.clothes = clothes;
     })
+
   }
   
   moveClosetDoor() {
@@ -69,10 +75,10 @@ export class HomeComponent implements OnInit{
     this.store.dispatch(cleanDatabaseFiles());
   }  
 
-openAddClothesDialog(type: string){
-  const addDialogRef = this.dialog.open(AddClothesModalComponent, { 
-    width: '300px',
-    data: {type: type}
+  openAddClothesDialog(type: string){
+    const addDialogRef = this.dialog.open(AddClothesModalComponent, { 
+      width: '300px',
+      data: {type: type}
     });
 
     addDialogRef.afterClosed().subscribe(result => {
@@ -117,6 +123,19 @@ openAddClothesDialog(type: string){
       width: '400px',
       data: {userId : this.userId}
     });
+  }
+
+  addOutfitFun(){
+    this.outfitToBeAdded$.subscribe((outfit) => {
+      if(outfit != null){
+        this.store.dispatch(addOutfitToCloset({outfit: outfit}));
+      }
+    }
+    );
+  }
+
+  removeClothesItem(clothesId: number){
+    this.store.dispatch(removeClothesFromOutfit({clothesId: clothesId}));
   }
 
 }

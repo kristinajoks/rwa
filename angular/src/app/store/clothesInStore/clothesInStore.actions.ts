@@ -5,12 +5,9 @@ import { createAction, props } from "@ngrx/store";
 import { ClothesInStoreDTO } from "../../data/dtos/clothesInStore.dto";
 import { Clothes } from "../../data/models/clothes";
 
-export const getClothesInTheStore = createAction('[ClothesInStore] Get Clothes In The Store', props<{userId: number}>());
-export const getClothesInTheStoreSuccess = createAction('[ClothesInStore] Get Clothes In The Store Success', props<{clothesInStore: ClothesInStoreDTO}>());
+export const getClothesInTheStore = createAction('[Shop] Get Clothes In The Store', props<{userId: number}>());
+export const getClothesInTheStoreSuccess = createAction('[Shop] Get Clothes In The Store Success', props<{clothesInStore: ClothesInStoreDTO}>());
 
-export const cleanMyClothes = createAction('[ClothesInStore] Clean My Clothes');
-
-
-export const loadClothesFromClosetForSale = createAction('[Closet] Load Clothes For Sale', props<{id: number}>());
-export const loadClothesFromClosetForSaleSuccess = createAction('[Closet] Load Clothes For Sale Success', props<{clothes: Clothes[]}>());
-export const loadClothesFromClosetForSaleFailure = createAction('[Closet] Load Clothes For Sale Failure', props<{error: any}>());
+export const loadClothesFromClosetForSale = createAction('[Shop] Load Clothes For Sale', props<{id: number}>());
+export const loadClothesFromClosetForSaleSuccess = createAction('[Shop] Load Clothes For Sale Success', props<{clothes: Clothes[]}>());
+export const loadClothesFromClosetForSaleFailure = createAction('[Shop] Load Clothes For Sale Failure', props<{error: any}>());

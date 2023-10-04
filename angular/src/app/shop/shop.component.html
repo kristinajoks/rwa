@@ -8,17 +8,10 @@
 
     <div class="content-container">
 
-        <div *ngIf="(currentUser$ | async) as currentUser">
+        <div class="coll-div" *ngIf="(currentUser$ | async) as currentUser">
             
             <div class="shop-image-collection" *ngIf="currentUser.role=='Seller'">
-                <!-- svoju odecu na prodaju vidi samo prodavac -->
-
-                <!-- e trenutno je problematicno to sto sam ucitala u selectClothesInStore i odecu 
-                od svih ostalih korisnika kada neko nije prodavac, tako da vise ne ispada currentUserClothes
-                i to ce morati da se izmeni tako da se ili tudja odeca cuva negde drugde ili da se
-                pamte i podaci o korisniku u ovom state a to deluje dobro, znaci id i korisnicko ime,
-            koje nekako treba da uklopim u svaki iz niza dto kada se ucitaju korisnici, a inace ce biti
-                curr user id + username-->
+                
                 <p>My clothes for sale:</p>
                 
                 <div class="shop-image-cont" *ngIf="(currentUserClothes$ | async) as currUserClothes">
@@ -30,7 +23,10 @@
 
                     <div *ngIf="currUserClothes.length==0">
                         <p class="empty-p">
-                            You have no items for sale at the moment.
+                            You have no items for sale at the moment. 
+                        </p>
+                        <p class="add-clothes-nav" routerLink="/home">
+                            Start by selecting some.
                         </p>
                     </div>
                 </div>
@@ -38,7 +34,7 @@
             </div>
         </div>
 
-        <div class="shop-image-collection" >
+        <div class="shop-image-collection coll-div" >
             <p>Users are selling:</p>
 
             <div class="shop-image-cont" *ngIf="(otherUsersClothes$ | async) as otherUserClothes">

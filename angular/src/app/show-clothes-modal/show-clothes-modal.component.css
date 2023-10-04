@@ -1,6 +1,6 @@
 .clothing-item-image{
-    width: 100%;
-    height: 100%;
+    width: 200px;
+    height: 300px;
     object-fit: cover;
     border-radius: 10px;
     cursor: pointer;
@@ -12,7 +12,7 @@
     width: 70px;
     border-radius: 10px;
     margin: 10px;
-    margin-top: 50px;
+    font-size: medium;
 }
 
 .modal-buttons{
@@ -27,11 +27,51 @@
     flex-direction: column;
 }
 
-.clothes-collecion-div{
-    display: flex;
-    border: 1 px solid black;
-}
-
 .no-clothes-text{
     margin: 10px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    background-color: #fae3d9;
+}
+  
+.c{
+    display: flex;
+    justify-content: center;
+}
+
+.clothing-preview {
+    flex: 0 0 auto;
+}
+
+.below-image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carousel-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 8px;
+}
+
+.carousel-button:active {
+    transform: scale(0.95);
+}
+  
+.add-to-outfit-button{
+    height: 30px;
+    width: 110px;
+    border-radius: 10px;
+    margin: 10px;
+    font-size: medium;
+    cursor: pointer;
 }

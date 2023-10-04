@@ -1,8 +1,7 @@
-import { ClothesInStoreDTO, OthersClothesDTO } from "../../data/dtos/clothesInStore.dto";
+import { ClothesInStoreDTO } from "../../data/dtos/clothesInStore.dto";
 
 export interface ClothesInStoreState {
     myClothes: ClothesInStoreDTO[];
-    // othersClothes: OthersClothesDTO[];
     othersClothes: ClothesInStoreDTO[];
 }
 

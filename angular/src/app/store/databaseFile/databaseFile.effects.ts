@@ -49,25 +49,4 @@ export class DatabaseFileEffects{
         })
     ), { dispatch: false });
 
-
-    // addClothesSuccess$ = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(addClothesSuccess),
-    //         switchMap(() => {
-    //             return this.store.select(selectClosetId).pipe(
-    //                 map((closetId) => loadCloset({ id: closetId }))
-    //             );
-    //         })
-    //     )
-    // );
-
-    // addClothesSuccess$ = createEffect(() => this.actions$.pipe(
-    //     ofType(addClothesSuccess),
-    //     map(() => {
-    //         this.store.select(selectClosetId).subscribe((closetId) => {
-    //             return(loadCloset({id: closetId}));
-    //         }
-    //         );
-    //     })
-    // ));
 }

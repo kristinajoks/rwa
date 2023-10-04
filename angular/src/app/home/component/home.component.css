@@ -235,3 +235,39 @@ p{
     color: darkcyan;
     font-size: larger;
 }
+
+.outfit-preview{
+    height: 90%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.clothes-preview{
+    width: 160px;
+    margin: -20px;
+}
+
+.add-outfit-button, .remove-clothes{
+    height: 30px;
+    width: 110px;
+    border-radius: 10px;
+    font-size: medium;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-top: 10px;
+}
+
+.remove-clothes{
+    height: 25px;
+    width: 26px;
+    border-radius: 10px;
+}
+
+.clothing-item-outfit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+}

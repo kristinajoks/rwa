@@ -1,14 +1,33 @@
-<div>
- <div class="clothes-collecion-div" *ngIf="(loadedDatabaseFiles$ | async) as files">
+<div class="modal-content">
+ <div class="clothes-collecion-div c" *ngIf="(loadedDatabaseFiles$ | async) as files">
 
-    <div class="clothing-preview" *ngFor="let dbFile of loadedDatabaseFiles$ | async">
+    <button *ngIf="files.length>1" class="carousel-button prev" (click)="prevItem()"> << </button>
+
+    <div class="clothing-preview" *ngFor="let dbFile of loadedDatabaseFiles$ | async; let i = index" [hidden]="i !== currentIndex">
         <img class="clothing-item-image" src="assets/clothes/{{data.type}}/{{dbFile.filename}}" alt="{{dbFile.filename}}" >        
 
-        <div class="sell-check-div" *ngIf="isSeller">
-            <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" />
-            <label class="check-label" for="show-clothes-modal-div"> Sell </label>
+        <div class="below-image">
+
+            <div class="sell-check-div" *ngIf="isSeller">
+                
+                <div *ngIf="!isClothesAvatarForSale(dbFile.id)">
+                    <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" (change)="changeClothesForSale(dbFile.id)" />
+                <label class="check-label" for="show-clothes-modal-div"> Sell </label>
+            </div>
+            
+            <div *ngIf="isClothesAvatarForSale(dbFile.id)">
+                <input type="checkbox" id="show-clothes-modal-div" class="show-clothes-modal" (change)="changeClothesForSale(dbFile.id)"/>
+                <label class="check-label" for="show-clothes-modal-div"> Remove from sale </label>
+            </div>  
+            
+            </div>
+            
+            <button class="add-to-outfit-button" (click)="addClothesToOutfitFun(dbFile.id)">Add to outfit</button>
         </div>
     </div>
+
+    <button *ngIf="files.length>1" class="carousel-button next" (click)="nextItem()"> >> </button>
+
 </div>
 
 <div class="no-clothes-div" *ngIf="!isThereClothes">

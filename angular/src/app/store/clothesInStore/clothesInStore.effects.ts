@@ -53,21 +53,4 @@ export class ClothesInStoreEffects{
         ))
     ));
 
-    // loadClothesFromCloset$ = createEffect(() => this.actions$.pipe(
-    //     ofType(loadClothesFromCloset),
-    //     switchMap((action)=> this.closetService.getClothesFromCloset(action.id).pipe(
-    //         map((clothes) => loadClothesFromClosetSuccess({clothes: clothes as Clothes[]})),
-    //         catchError((error) => of(error))
-    //     ))
-    // ));
-
-    // loadDatabaseFile$ = createEffect(() => this.actions$.pipe(
-    //     ofType(loadDatabaseFile),
-    //     switchMap((action) => this.databaseFileService.getDatabaseFileById(action.id).pipe(
-    //         map((databaseFile) => [
-    //             loadDatabaseFileSuccess({databaseFile: databaseFile as FileDto})
-    //         ]),
-    //         catchError((error) => of(error))
-    //     ))
-    // ));
 }

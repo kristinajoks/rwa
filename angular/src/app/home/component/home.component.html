@@ -71,11 +71,24 @@
     </mat-sidenav-content>
   
     <mat-sidenav #sidenav2 mode="side" opened class="side-nav home-right-side" position="end">
-        <p>
-            Kombinacije
-            <br>
-            Pakovanje u kofer za prodaju
-        </p>
+
+        <div class="outfits-nav menu-item menu-item-small" >
+            <p>
+                Outfits
+            </p>
+        </div>
+
+        <div class="outfit-preview" *ngIf="(outfitToBeAdded$ | async) as newOutfit">
+
+            <div class="clothing-item-outfit" *ngFor="let item of newOutfit.clothes">
+
+                <img class="clothes-preview" src="assets/clothes/{{item.src}}" alt="image" />
+
+                <button class="remove-clothes" (click)="removeClothesItem(item.clothesId)">X</button>
+            </div>
+
+            <button *ngIf="newOutfit.clothes.length > 0" class="add-outfit-button" (click)="addOutfitFun()">Add outfit</button>
+        </div>
     </mat-sidenav>
 
 </mat-sidenav-container>

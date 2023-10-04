@@ -6,12 +6,3 @@ export interface ClothesInStoreDTO{
     clothesType: ClothesType;
     filename: string;
 }
-
-export interface OthersClothesDTO{ //trial
-    userId: number;
-    username: string;
-    clothesId: number;
-    isSold: boolean;
-    clothesType: ClothesType;
-    filename: string;
-}

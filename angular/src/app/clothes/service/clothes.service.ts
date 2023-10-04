@@ -60,7 +60,10 @@ export class ClothesService {
   }
 
   getClothesById(id: number){
-    return this.httpClient.get(`http://localhost:3000/clothes/${id}`);
+    return this.httpClient.get(`http://localhost:3000/clothes/findbyid/${id}`,);
   }
 
+  changeClothesForSale(clothesId: number){
+    return this.httpClient.put(`http://localhost:3000/clothes/${clothesId}/updateIsForSale`, {});
+  }
 }

@@ -51,6 +51,12 @@ export class ClothesService {
         return await this.clothesRepository.findOneBy({id: id}); 
     }
 
+    async findClothesByIds(ids: number[]){ //revise
+        const clothes : Clothes[] = await this.clothesRepository.find({where: {id: In(ids)}, relations: ['closet', 'outfits']});
+
+        return clothes;
+    }
+
     async addAvatar(clothesId: number, imageBuffer: Buffer, filename: string){
 
         const queryRunner = this.conneciton.createQueryRunner();
@@ -79,6 +85,12 @@ export class ClothesService {
         finally{
             await queryRunner.release();
         }
+    }
+
+    async updateClothesForSale(clothesId: number){
+        const clothes = await this.clothesRepository.findOneBy({id: clothesId});
+        clothes.isForSale = !clothes.isForSale;
+        return await this.clothesRepository.save(clothes);
     }
 
 }

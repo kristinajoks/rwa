@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { createClothesDTO } from './clothes.dto';
 import { ClothesService } from './clothes.service';
@@ -15,29 +15,56 @@ export class ClothesController {
     @Post() 
     @UseGuards(AuthGuard('jwt'))
     async createClothes(@Body() clothesToBeCreated: createClothesDTO){
-        return await this.clothesService.createClothes(clothesToBeCreated);
+        try{
+            return await this.clothesService.createClothes(clothesToBeCreated);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Get()
     @UseGuards(AuthGuard('jwt'))
     async getClothes(){
-        return await this.clothesService.getClothes();
+        try{
+            return await this.clothesService.getClothes();
+        }
+        catch(err){
+            return err;
+        }
     }
 
-    @Get('findbyid')
+    @Get('findbyid/:id')
     @UseGuards(AuthGuard('jwt'))
-    async findClothesById(@Body() id: number){
-        return await this.clothesService.findClothesById(id);
+    async findClothesById(@Param('id') id: number){
+        try{
+            return await this.clothesService.findClothesById(id);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Post('avatar')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(FileInterceptor('file'))
     async addAvatar(@Body('clothesId') clothesId: number, @UploadedFile() file: Express.Multer.File){ 
- 
-        console.log("nest controller add avatar " + clothesId + file.originalname);
-
-        return await this.clothesService.addAvatar(clothesId, file.buffer, file.originalname);
+        try{
+            return await this.clothesService.addAvatar(clothesId, file.buffer, file.originalname);
+        }
+        catch(err){
+            return err;
+        }
     }
 
+    @Put(':id/updateIsForSale')
+    @UseGuards(AuthGuard('jwt'))
+    async updateIsForSale(@Param('id') id: number){
+        try{
+            return await this.clothesService.updateClothesForSale(id);
+        }
+        catch(err){
+            return err;
+        }
+    }
 }

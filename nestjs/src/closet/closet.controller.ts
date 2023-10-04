@@ -10,30 +10,55 @@ export class ClosetController {
     @Post('create')
     @UseGuards(AuthGuard('jwt'))
     createCloset(@Body() createCloset: CreateClosetDTO){
-        return this.service.createCloset(createCloset);
+        try{
+            return this.service.createCloset(createCloset);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Get()
     @UseGuards(AuthGuard('jwt'))
     getClosets(){
-        return this.service.getClosets();
+        try{
+            return this.service.getClosets();
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Get('findbyid')
     @UseGuards(AuthGuard('jwt'))
     findClosetById(@Query("id") id: number) {
-        return this.service.findClosetById(id);
+        try{
+            return this.service.findClosetById(id);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Put('id')
     @UseGuards(AuthGuard('jwt'))
     updateCloset(@Param('id') id: number,@Body() updateCloset: CreateClosetDTO){
-        return this.service.updateCloset(id, updateCloset);
+        try{
+            return this.service.updateCloset(id, updateCloset);
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Get('getclothes')
     @UseGuards(AuthGuard('jwt'))
     getClothesFromCloset(@Query('id') id: number){
-        return this.service.getClothesFromCloset(id);
+        try{
+            return this.service.getClothesFromCloset(id);
+        }
+        catch(err){
+            return err;
+        }
     }
 }

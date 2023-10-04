@@ -35,10 +35,10 @@ export const clothesInStoreReducer = createReducer(
             clothesType: item.type,
             filename: item.color + ".png"
         }));
-        const updatedClothes = [...state.othersClothes, ...mappedClothes];
+
         return {
             ...state,
-            othersClothes: updatedClothes
+            othersClothes: mappedClothes
         };
     }),
     on(logoutUserSuccess, (state) => ({

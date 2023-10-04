@@ -9,15 +9,25 @@ export class DatabaseFilesController {
 
     @Get()
     async getDatabaseFiles(){
-        return await this.databaseFilesService.getFiles();
+        try{
+            return await this.databaseFilesService.getFiles();
+        }
+        catch(err){
+            return err;
+        }
     }
 
     @Get(':id')
     async getDatabaseFileById(@Res() response, @Param('id', ParseIntPipe) id: number){
-        const file = await this.databaseFilesService.getFileById(id);
-
-        response.setHeader('Content-Type', 'application/json');
-        response.send(file);
+        try{
+            const file = await this.databaseFilesService.getFileById(id);
+            
+            response.setHeader('Content-Type', 'application/json');
+            response.send(file);
+        }
+        catch(err){
+            return err;
+        }
     }
 }
 

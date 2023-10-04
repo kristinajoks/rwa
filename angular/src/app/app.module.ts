@@ -28,6 +28,7 @@ import { ShowClothesModalComponent } from './show-clothes-modal/show-clothes-mod
 import { DatabaseFileEffects } from './store/databaseFile/databaseFile.effects';
 import { SellerDialogComponent } from './seller-dialog/seller-dialog.component';
 import { ClothesInStoreEffects } from './store/clothesInStore/clothesInStore.effects';
+import { OutfitEffects } from './store/outfits/outfits.effects';
 
 const appRoutes: Routes = [
   { 
@@ -77,7 +78,7 @@ const appRoutes: Routes = [
       MatDialogModule,
       HttpClientModule,
       StoreModule.forRoot(AppState, {}),
-      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects, DatabaseFileEffects, ClothesInStoreEffects]),
+      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects, DatabaseFileEffects, ClothesInStoreEffects, OutfitEffects]),
       StoreDevtoolsModule.instrument({
         maxAge: 25, 
         logOnly: !isDevMode(), 
