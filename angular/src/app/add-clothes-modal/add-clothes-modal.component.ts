@@ -53,14 +53,10 @@ export class AddClothesModalComponent implements OnInit{
       image: this.selectedImage
     }
 
-    console.log('ret data' + this.returnData.image);
-
     this.dialogRef.close(this.returnData);
   }
 
   onImageSelected(event: any){
-    console.log(event.target.files[0]);
-
     const image = event.target.files[0];
     if(image){
       const reader = new FileReader();
@@ -72,7 +68,6 @@ export class AddClothesModalComponent implements OnInit{
 
     this.selectedImage = event.target.files[0];
   }
-
 
   getPlacementOptions(): string[]{
     return Object.values(ClothesPlacement);

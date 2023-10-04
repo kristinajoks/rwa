@@ -9,13 +9,16 @@ import { ClosetService } from "../../closet/service/closet.service";
 import { Closet } from "../../data/models/closet";
 import { ImageService } from "../../image.service";
 import { DatabaseFile } from "../../data/models/databaseFile";
+import { Store } from "@ngrx/store";
+import { selectClosetId } from "./closet.selector";
 
 @Injectable()
 export class ClosetEffects {
     constructor(private actions$: Actions, 
         private clothesService: ClothesService,
         private closetService: ClosetService,
-        private imageService: ImageService) 
+        private store: Store
+        ) 
     { }
 
     addClothes$ = createEffect(() => this.actions$.pipe(
@@ -31,6 +34,16 @@ export class ClosetEffects {
             catchError((error) => of(addClothesFailure({error})))
         ))
     ));
+
+    addClothesSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(addClothesSuccess),
+        switchMap(() => this.store.select(selectClosetId).pipe(
+            map((closetId) => {
+                return loadClothesFromCloset({id: closetId});
+            })
+        ))
+    ));
+
 
     loadClothesFromCloset$ = createEffect(() => this.actions$.pipe(
         ofType(loadClothesFromCloset),

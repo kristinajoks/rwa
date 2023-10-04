@@ -1,1 +1,29 @@
-<p>shop works!</p>
+<div class="shop-page background-container">
+
+    <div class="home-top-bar">
+        <div class="home-page-nav">
+            <a routerLink="/home">Home</a>
+        </div>
+    </div>
+
+    <div *ngIf="(currentUser$ | async) as currentUser">
+        
+        <div class="shop-image-collection" *ngIf="currentUser.role=='Seller'">
+            <!-- svoju odecu na prodaju vidi samo prodavac -->
+
+        <div class="shop-image-cont" *ngIf="(currentUserClothes$ | async) as currUserClothes">
+
+            <div class="shop-image-div" *ngFor="let item of currUserClothes">
+                <img class="shop-image" src="assets/clothes/{{item.clothesType}}/{{item.filename}}" alt="image" />
+
+            </div>
+
+        </div>
+    
+    </div>
+
+    <div>
+    
+    
+    </div>
+</div>

@@ -1,0 +1,34 @@
+.shop-image{
+    width: 200px;
+    height: 300px;
+}
+
+.shop-image-cont{
+    display: flex;
+}
+
+.shop-image-div{
+    border: 1px solid black;
+    border-radius: 20px;
+    margin: 20px;
+    background-color: #fae3d9;
+}
+
+.shop-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-top-bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    top: 0;
+    position: fixed;
+    font-size: larger;
+    font-family: SyneRegular;
+    margin-top: 20px;
+}

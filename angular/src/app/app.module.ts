@@ -27,6 +27,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ShowClothesModalComponent } from './show-clothes-modal/show-clothes-modal.component';
 import { DatabaseFileEffects } from './store/databaseFile/databaseFile.effects';
 import { SellerDialogComponent } from './seller-dialog/seller-dialog.component';
+import { ClothesInStoreEffects } from './store/clothesInStore/clothesInStore.effects';
 
 const appRoutes: Routes = [
   { 
@@ -60,7 +61,8 @@ const appRoutes: Routes = [
     HomeComponent,
     AddClothesModalComponent,
     ShowClothesModalComponent,
-    SellerDialogComponent
+    SellerDialogComponent,
+    ShopComponent
   ],
 
     imports: [
@@ -75,7 +77,7 @@ const appRoutes: Routes = [
       MatDialogModule,
       HttpClientModule,
       StoreModule.forRoot(AppState, {}),
-      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects, DatabaseFileEffects]),
+      EffectsModule.forRoot([AuthEffects, UserEffects, ClosetEffects, DatabaseFileEffects, ClothesInStoreEffects]),
       StoreDevtoolsModule.instrument({
         maxAge: 25, 
         logOnly: !isDevMode(), 
