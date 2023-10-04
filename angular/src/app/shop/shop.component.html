@@ -11,6 +11,13 @@
         <div class="shop-image-collection" *ngIf="currentUser.role=='Seller'">
             <!-- svoju odecu na prodaju vidi samo prodavac -->
 
+            <!-- e trenutno je problematicno to sto sam ucitala u selectClothesInStore i odecu 
+            od svih ostalih korisnika kada neko nije prodavac, tako da vise ne ispada currentUserClothes
+            i to ce morati da se izmeni tako da se ili tudja odeca cuva negde drugde ili da se
+            pamte i podaci o korisniku u ovom state a to deluje dobro, znaci id i korisnicko ime,
+           koje nekako treba da uklopim u svaki iz niza dto kada se ucitaju korisnici, a inace ce biti
+            curr user id + username-->
+
         <div class="shop-image-cont" *ngIf="(currentUserClothes$ | async) as currUserClothes">
 
             <div class="shop-image-div" *ngFor="let item of currUserClothes">
@@ -23,7 +30,14 @@
     </div>
 
     <div>
-    
+        <div class="shop-image-cont" *ngIf="(currentUserClothes$ | async) as currUserClothes">
+
+            <div class="shop-image-div" *ngFor="let item of currUserClothes" >
+                <img class="shop-image" src="assets/clothes/{{item.clothesType}}/{{item.filename}}" alt="image" />
+
+            </div>
+
+        </div>
     
     </div>
 </div>

@@ -9,3 +9,7 @@ export const loadUserFailure = createAction('[User] Load User Failure', props<{e
 export const changeUserRole = createAction('[User] Change User Role', props<{userId: number, role: Role}>());
 export const changeUserRoleSuccess = createAction('[User] Change User Role Success', props<{user: User}>());
 export const changeUserRoleFailure = createAction('[User] Change User Role Failure', props<{error: any}>());
+
+export const loadAllUsers = createAction('[User] Load Users');
+export const loadAllUsersSuccess = createAction('[User] Load Users Success', props<{users: User[]}>());
+export const loadAllUsersFailure = createAction('[User] Load Users Failure', props<{error: any}>());

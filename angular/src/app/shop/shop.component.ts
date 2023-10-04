@@ -10,6 +10,7 @@ import { loadDatabaseFile } from '../store/databaseFile/databaseFile.actions';
 import { Clothes } from '../data/models/clothes';
 import { getClothesInTheStore } from '../store/clothesInStore/clothesInStore.actions';
 import { selectClothesInStore } from '../store/clothesInStore/clothesInStore.selector';
+import { loadAllUsers } from '../store/users/user.actions';
 
 @Component({
   selector: 'app-shop',
@@ -29,6 +30,8 @@ export class ShopComponent implements OnInit{
     ) { }
 
   ngOnInit(): void {
+
+    this.store.dispatch(loadAllUsers());
   }
 
 }

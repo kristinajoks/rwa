@@ -4,6 +4,7 @@ import { loadClothesFromCloset, loadClothesFromClosetSuccess } from "../closet/c
 
 export const clothesInStoreReducer = createReducer(
     initialState,
+    //mozda i na loadUser neka izmena nesto
     on(loadClothesFromCloset, (state) => ({
         ...state,
         clothes: []
