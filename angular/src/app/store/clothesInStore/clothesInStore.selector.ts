@@ -3,4 +3,5 @@ import { ClothesInStoreState } from "./clothesInStore.state";
 
 export const selectClothesInStoreState = createFeatureSelector<ClothesInStoreState>('clothesInStore');
 
-export const selectClothesInStore = createSelector(selectClothesInStoreState, (state: ClothesInStoreState) => state.clothes);
+export const selectMyClothesInStore = createSelector(selectClothesInStoreState, (state: ClothesInStoreState) => state.myClothes);
+export const selectOthetsClothesInStore = createSelector(selectClothesInStoreState, (state: ClothesInStoreState) => state.othersClothes);

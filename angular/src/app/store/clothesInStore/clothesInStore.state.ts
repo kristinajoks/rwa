@@ -1,9 +1,13 @@
-import { ClothesInStoreDTO } from "../../data/dtos/clothesInStore.dto";
+import { ClothesInStoreDTO, OthersClothesDTO } from "../../data/dtos/clothesInStore.dto";
 
 export interface ClothesInStoreState {
-    clothes: ClothesInStoreDTO[];
+    myClothes: ClothesInStoreDTO[];
+    // othersClothes: OthersClothesDTO[];
+    othersClothes: ClothesInStoreDTO[];
 }
 
 export const initialState: ClothesInStoreState = {
-    clothes: []
+    myClothes: [],
+    othersClothes: []
 };
+

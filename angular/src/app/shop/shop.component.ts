@@ -9,7 +9,7 @@ import { selectDatabaseFileLoadedDatabaseFiles } from '../store/databaseFile/dat
 import { loadDatabaseFile } from '../store/databaseFile/databaseFile.actions';
 import { Clothes } from '../data/models/clothes';
 import { getClothesInTheStore } from '../store/clothesInStore/clothesInStore.actions';
-import { selectClothesInStore } from '../store/clothesInStore/clothesInStore.selector';
+import { selectMyClothesInStore, selectOthetsClothesInStore } from '../store/clothesInStore/clothesInStore.selector';
 import { loadAllUsers } from '../store/users/user.actions';
 
 @Component({
@@ -24,7 +24,8 @@ export class ShopComponent implements OnInit{
 
   currentUser$ = this.store.select(selectUser);
 
-  currentUserClothes$ = this.store.select(selectClothesInStore);
+  currentUserClothes$ = this.store.select(selectMyClothesInStore);
+  otherUsersClothes$ = this.store.select(selectOthetsClothesInStore);
 
   constructor(private store: Store,
     ) { }
