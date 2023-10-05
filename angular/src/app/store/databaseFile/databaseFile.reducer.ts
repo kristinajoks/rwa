@@ -11,9 +11,6 @@ export const databaseFileReducer = createReducer(
     error: null,
   })),
   on(loadDatabaseFileSuccess, (state, { databaseFile }) => {
-    console.log(databaseFile);
-    console.log(state)
-    console.log(state.loadedDatabaseFiles);
     return{
     ...state,  loading: false,
     loadedDatabaseFiles: [...state.loadedDatabaseFiles, databaseFile],

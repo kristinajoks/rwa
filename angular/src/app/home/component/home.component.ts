@@ -16,7 +16,7 @@ import { Clothes } from '../../data/models/clothes';
 import { ImageService } from '../../image.service';
 import { SellerDialogComponent } from '../../seller-dialog/seller-dialog.component';
 import { cleanDatabaseFiles } from '../../store/databaseFile/databaseFile.actions';
-import { initializeOutfit, removeClothesFromOutfit } from '../../store/outfits/outfits.actions';
+import { getOutfits, initializeOutfit, removeClothesFromOutfit } from '../../store/outfits/outfits.actions';
 import { selectOutfitToBeAdded } from '../../store/outfits/outfits.selector';
 import { selectDatabaseFileLoadedDatabaseFiles } from '../../store/databaseFile/databaseFile.selector';
 
@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit{
     this.store.select(selectClothes).subscribe((clothes) =>{
       this.clothes = clothes;
     })
-
   }
   
   moveClosetDoor() {

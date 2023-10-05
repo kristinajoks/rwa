@@ -33,6 +33,6 @@ export class OutfitService {
     }
 
     async getOutfits(){
-        return await this.outfitRepository.find({relations: ['clothes']});
+        return await this.outfitRepository.find({relations: ['clothes', 'closet']});
     }
 }

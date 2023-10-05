@@ -29,6 +29,7 @@ import { DatabaseFileEffects } from './store/databaseFile/databaseFile.effects';
 import { SellerDialogComponent } from './seller-dialog/seller-dialog.component';
 import { ClothesInStoreEffects } from './store/clothesInStore/clothesInStore.effects';
 import { OutfitEffects } from './store/outfits/outfits.effects';
+import { OutfitsComponent } from './outfit/component/outfits.component';
 
 const appRoutes: Routes = [
   { 
@@ -63,7 +64,8 @@ const appRoutes: Routes = [
     AddClothesModalComponent,
     ShowClothesModalComponent,
     SellerDialogComponent,
-    ShopComponent
+    ShopComponent,
+    OutfitsComponent
   ],
 
     imports: [

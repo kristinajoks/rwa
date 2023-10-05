@@ -21,20 +21,6 @@
     justify-content: space-around;
 }
 
-.home-top-bar {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    justify-content: flex-start;
-    top: 0;
-    position: fixed;
-    font-size: larger;
-    font-family: SyneRegular;
-    margin-top: 20px;
-    margin-left: 20px;
-}
-
 .content-container{
     height: 100%;
 }

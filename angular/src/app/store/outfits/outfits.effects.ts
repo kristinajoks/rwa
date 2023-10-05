@@ -50,4 +50,9 @@ export class OutfitEffects {
         ))
     ));
 
+    initializeOutfit$ = createEffect(() => this.actions$.pipe(
+        ofType(initializeOutfit),
+        map((action) => getOutfits())
+    ));
+
 }

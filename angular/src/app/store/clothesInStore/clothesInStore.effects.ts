@@ -36,12 +36,10 @@ export class ClothesInStoreEffects{
     loadAllUsersSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(loadAllUsersSuccess), //umm u sure?
         withLatestFrom(this.store.select(selectUserId)),
-        tap(([action, currentId]) => console.log(action, currentId)),
         switchMap(([action, currentId]) => action.users
         .filter((user) => user.role === Role.Seller && user.id !== currentId)
         .map((user) => loadClothesFromClosetForSale({id: user.closet.id})
-        )),
-        tap((action) => console.log(action))       
+        ))
     ));
 
     

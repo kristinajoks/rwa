@@ -1,0 +1,34 @@
+<div class="background-container">
+
+    <div class="home-top-bar">
+        <div class="home-page-nav">
+            <a routerLink="/home">Home</a>
+        </div>
+    </div>
+
+    <p>My outfits:</p>
+
+    <div *ngIf="closetId$ | async as closetId">
+        <div class="outfits-container" *ngIf="outfits$ | async as outfits">
+
+            <div class="one-outfit-container" *ngFor="let fit of outfits">
+                
+                <div *ngIf="fit.closetId == closetId">
+                    
+                    <div class="outfit-clothes-container" *ngFor="let clothes of fit.clothes">
+                        
+                        <div class="clothes-preview" >
+                            <img src="assets/clothes/{{clothes.src}}" alt="clothes image" class="clothes-image">
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

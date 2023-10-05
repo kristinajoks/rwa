@@ -8,7 +8,6 @@ export const outfitReducer = createReducer(
     on(getOutfitsSuccess, (state, {outfits}) => {
         let outfitDTOs : OutfitDTO[] = [];
 
-        
         outfits.forEach((outfit) => {
                 if(state.outfitToBeAdded !== null && state.outfitToBeAdded?.closetId !== undefined 
                      && state.outfitToBeAdded?.closetId !== null){
@@ -19,14 +18,15 @@ export const outfitReducer = createReducer(
                     outfit.clothes.forEach((clothe) => {
                         clothesDto = {
                             clothesId: clothe.id,
-                            src:`${clothe.type}/${clothe.color}}.png`
+                            src:`${clothe.type}/${clothe.color}.png`
                         };
                         clothesArray.push(clothesDto);
                     });
 
                     const outfitDTO : OutfitDTO = {
                         id: outfit.id,
-                        closetId: state.outfitToBeAdded.closetId,
+                        // closetId: state.outfitToBeAdded.closetId,
+                        closetId: outfit.closet.id,
                         clothes: clothesArray
                     }
 
@@ -35,7 +35,7 @@ export const outfitReducer = createReducer(
             });
         return {
             ...state,
-            outfitDTOs,
+            outfits: outfitDTOs,
             error: null,
         };
     }),

@@ -64,7 +64,6 @@ export class ShowClothesModalComponent implements OnInit {
 
   closeModal(): void {
     this.dialogRef.close();
-    console.log("modal closed");
     this.store.dispatch(cleanDatabaseFiles());
   }
 

@@ -122,3 +122,17 @@ body { margin: 0; font-family: Baloo, SyneRegular, IBMPlex; }
     margin-top: 0px;
     font-family: IBMPlex;
 }
+
+.home-top-bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    top: 0;
+    position: fixed;
+    font-size: larger;
+    font-family: SyneRegular;
+    margin-top: 20px;
+    margin-left: 20px;
+}

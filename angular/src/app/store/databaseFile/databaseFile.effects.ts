@@ -42,11 +42,4 @@ export class DatabaseFileEffects{
             ))
         ));
 
-    loadDatabaseFileSuccess$ = createEffect(() => this.actions$.pipe(
-        ofType(loadDatabaseFileSuccess),
-        tap((action) => {
-            console.log(action.databaseFile);
-        })
-    ), { dispatch: false });
-
 }

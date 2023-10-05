@@ -1,0 +1,18 @@
+.clothes-image{
+    width:250px;
+    height: 270px;
+}
+
+.outfits-container{
+    display: flex;
+}
+
+.one-outfit-container{
+    display: flex;
+    flex-direction: column;
+}
+
+p{
+    font-size: large;
+    font-family: 'IBMPlex';
+}

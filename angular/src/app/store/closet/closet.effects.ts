@@ -27,9 +27,6 @@ export class ClosetEffects {
         ofType(addClothesToCloset),
         switchMap((action) => this.clothesService.createClothesWithAvatar(action.clothes)
         .pipe(
-            tap((clothes) => {
-                console.log(clothes);
-            }),
             map((clothes) => {
                 return addClothesSuccess({clothes: clothes as Clothes});
             }),
